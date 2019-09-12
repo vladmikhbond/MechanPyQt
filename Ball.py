@@ -1,3 +1,5 @@
+from PyQt5.QtCore import QPoint
+
 class Ball:
     def __init__(self, x, y, vx, vy):
         self.x = x
@@ -7,6 +9,7 @@ class Ball:
         self.fx = 0;
         self.fy = 0;
         self.m = 1;
+        self.points = []
 
     def step(self):
         ax = self.fx / self.m
@@ -15,6 +18,7 @@ class Ball:
         self.vy += ay
         self.x += self.vx
         self.y += self.vy
-
+        if len(self.points) < 1000:
+            self.points.append(QPoint(self.x, self.y));
 
 
