@@ -70,6 +70,7 @@ class Movy(QMainWindow):
         self.ball.y = o['y']
         self.ball.vx = o['vx']
         self.ball.vy = o['vy']
+        self.ball.points.clear()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

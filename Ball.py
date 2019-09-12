@@ -1,6 +1,10 @@
 from PyQt5.QtCore import QPoint
 
+POINTS_COUNT = 10008
+
 class Ball:
+
+
     def __init__(self, x, y, vx, vy):
         self.x = x
         self.y = y
@@ -18,7 +22,7 @@ class Ball:
         self.vy += ay
         self.x += self.vx
         self.y += self.vy
-        if len(self.points) < 1000:
+        if len(self.points) < POINTS_COUNT:
             self.points.append(QPoint(self.x, self.y));
 
 
