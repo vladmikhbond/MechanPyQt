@@ -61,9 +61,15 @@ class Movy(QMainWindow):
 
 
     def okBtnClicked(self):
-        text = self.ui.textEdit.toPlainText()
+        text = self.ui.potential.toPlainText()
         self.V = eval("lambda x, y: " + text)
 
+        text = self.ui.conditions.toPlainText()
+        o = eval('{' + text + '}')
+        self.ball.x = o['x']
+        self.ball.y = o['y']
+        self.ball.vx = o['vx']
+        self.ball.vy = o['vy']
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

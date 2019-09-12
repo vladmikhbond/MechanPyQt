@@ -9,10 +9,10 @@ TODO
 вводит потенциал "" и вычислять траекторию
 
 
+терминал на домашнем компе
+> C:\Users\vladm\PycharmProjects\untitled\venv\Lib\site-packages\pyqt5_tools\Qt\bin\designer.exe
 
-
-
-
+> C:\Users\vladm\PycharmProjects\untitled\venv\Scripts\pyuic5.exe ui\mainForm.ui -o ui\mainForm.py
 
 
 
