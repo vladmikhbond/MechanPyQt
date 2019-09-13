@@ -1,9 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtGui import QPainter, QColor, QPolygon
+from PyQt5.QtGui import QPainter, QColor
 from PyQt5.QtCore import QTimer, QPoint
 from Ball import Ball
+from Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
+
 
 class Movy(QMainWindow):
 
@@ -19,58 +21,44 @@ class Movy(QMainWindow):
         self.timer.timeout.connect(self.step)
         self.timer.start(10)
         ##########################################################
-        self.ball = Ball(x=100, y=0, vx=0, vy=10)
+        self.central = Central(800, 800, Ball(100, 0, 0, 10))
+
 
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.okBtnClicked()
 
     def step(self):
-        k = -0.01
-        b = self.ball
-
-        b.fx = k * b.x
-        b.fy = k * b.y
-
-        d = 0.01
-        b.fx = (self.V(b.x + d, b.y) - self.V(b.x - d, b.y)) / (2 * d)
-        b.fy = (self.V(b.x, b.y + d) - self.V(b.x, b.y - d)) / (2 * d)
-
-
-        b.step()
+        self.central.step()
         self.repaint()
 
     def paintEvent(self, event):
         qp = QPainter()
 
         qp.begin(self)
-        qp.translate(400, 400)
+        qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
         # draw Center
         qp.drawEllipse(QPoint(0, 0), 5, 5)
 
-        Movy.drawBall(qp, self.ball)
+        self.drawBalls(qp)
         qp.end()
 
-    @staticmethod
-    def drawBall(qp, b):
+    def drawBalls(self, qp):
         qp.setBrush(QColor(168, 34, 3))
         r = 10
-        qp.drawEllipse(QPoint(b.x, b.y), r, r)
-        for p in b.points:
-            qp.drawPoint(p)
+        for b in self.central.balls:
+            qp.drawEllipse(QPoint(b.x, b.y), r, r)
+            for p in b.points:
+                qp.drawPoint(p)
 
 
     def okBtnClicked(self):
         text = self.ui.potential.toPlainText()
-        self.V = eval("lambda x, y: " + text)
+        self.central.refresh(text)
+
 
         text = self.ui.conditions.toPlainText()
-        o = eval('{' + text + '}')
-        self.ball.x = o['x']
-        self.ball.y = o['y']
-        self.ball.vx = o['vx']
-        self.ball.vy = o['vy']
-        self.ball.points.clear()
+        self.central.balls[0].refresh(text)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
