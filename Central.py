@@ -1,4 +1,5 @@
 DELTA = 0.01
+from PyQt5.QtCore import QTimer, QPoint, Qt
 
 def dV_dx(x, y):
     return (Central.V(x + DELTA, y) - Central.V(x - DELTA, y)) / (2 * DELTA)
@@ -11,6 +12,11 @@ def dV_dy(x, y):
 class Central:
 
     V = None
+
+
+    def ScreenToWorld(self, p: QPoint):
+        x0, y0 = self.width / 2, self.height / 2
+        return QPoint(p.x() - x0, y0 - p.y() )
 
     def __init__(self, width, height, *balls):
         self.width = width
