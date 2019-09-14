@@ -1,4 +1,4 @@
-DELTA = 0.01
+DELTA = 0.001
 from PyQt5.QtCore import QTimer, QPoint, Qt
 
 def dV_dx(x, y):
@@ -11,7 +11,7 @@ def dV_dy(x, y):
 
 class Central:
 
-    V = None
+    V = lambda x, y: 0
 
 
     def ScreenToWorld(self, p: QPoint):
@@ -38,3 +38,8 @@ class Central:
     def refresh(self, text):
         Central.V = eval("lambda x, y: " + text)
 
+    def T(self):
+        return sum(b.T() for b in self.balls)
+
+    def v(self):
+        return sum(b.V() for b in self.balls)
