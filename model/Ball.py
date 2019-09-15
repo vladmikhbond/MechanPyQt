@@ -15,7 +15,8 @@ class Ball:
         self.fy = 0
         self.m = 1
 
-        self.points = []
+        self.shadowX = None
+        self.shadowY = None
         self.owner = None
 
     def force(self):
@@ -29,15 +30,6 @@ class Ball:
         self.vy += ay
         self.x += self.vx
         self.y += self.vy
-        #                    add a point
-        ps = self.points
-        p = QPoint(self.x, self.y)
-        if not ps:
-            ps.append(p)
-        else:
-            q = ps[-1]
-            if len(ps) < POINTS_COUNT: # and ((p.x() - q.x())**2 + (p.y() - q.y())**2)**0.5 > 2:
-                ps.append(p)
 
     def refresh(self, text):
         o = eval('{' + text + '}')
@@ -46,7 +38,8 @@ class Ball:
         b.y = o['y']
         b.vx = o['vx']
         b.vy = o['vy']
-        b.points.clear()
+        b.shadowX = None
+        b.shadowY = None
 
     def r(self):
         return (self.x * self.x + self.y * self.y) ** 0.5

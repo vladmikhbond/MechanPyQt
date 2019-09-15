@@ -7,7 +7,7 @@ from model.Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
 
 T_INTERVAL = 20
-TRACK_COLOR = QColor('black')
+TRACK_COLOR = QColor('red')
 BALL_COLOR = QColor('red')
 SUN_COLOR = QColor('yellow')
 
@@ -16,7 +16,7 @@ class Movie(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.backImage = None
+        self.fieldImage = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -53,7 +53,7 @@ class Movie(QMainWindow):
         text = self.ui.potential.toPlainText()
         text = text.replace("r", "((x*x + y*y)**0.5)")
         self.central.refresh(text)
-        self.backImage = self.createFieldImage()
+        self.createFieldImage()
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
@@ -78,48 +78,43 @@ class Movie(QMainWindow):
     # ========================================== Painting
 
     def paintEvent(self, event):
-        self.drawField()
-        self.drawBalls()
-
-    def drawField(self):
-        if self.backImage:
-            qp = QPainter()
-            qp.begin(self)
-            qp.drawPixmap(0, 0, self.backImage)
-            qp.end()
-
-    def createFieldImage111(self):
-        pix = QPixmap(self.central.width, self.central.height)
         qp = QPainter()
-        qp.begin(pix)
+        qp.begin(self)
+        if self.fieldImage:
+            qp.drawPixmap(0, 0, self.fieldImage)
+
+        # balls
         qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
-
-        dx = 4
-        xLimit = round(self.central.width / 1.00)
-        xs = [x for x in range(1, xLimit, dx)]
-        vs = [math.log(abs(Central.V(x + dx/2, 0))) for x in range(0, xLimit, dx)]
-        vmax, vmin = max(*vs), min(*vs)
-        k = 256 / (vmax - vmin)
-
-        for x, v in zip(xs, vs):
-            color = 256 - k * (v - vmin)
-            pen = QPen(QBrush(QColor(color, color, 255)), dx + 1)
-            qp.setPen(pen)
-            qp.drawEllipse(QPoint(0, 0), x, x)
-
-        # draw Center
-        qp.setPen(QPen(QBrush(BALL_COLOR), 1))
-        qp.setBrush(SUN_COLOR)
-        # qp.drawEllipse(QPoint(0, 0), 5, 5)
+        qp.setPen(BALL_COLOR)
+        qp.setBrush(BALL_COLOR)
+        r = 10
+        for b in self.central.balls:
+            qp.drawEllipse(QPoint(b.x, b.y), r, r)
         qp.end()
 
-        return pix
+        # tracks
+        qp = QPainter()
+        qp.begin(self.fieldImage)
+        qp.translate(self.central.width / 2, self.central.height / 2)
+        qp.scale(1, -1)
+        qp.setPen(TRACK_COLOR)
+
+
+        for b in self.central.balls:
+            if b.shadowX:
+                qp.drawLine(b.x, b.y, b.shadowX, b.shadowY)
+            b.shadowX = b.x
+            b.shadowY = b.y
+
+            # qp.drawPoint(b.x, b.y)
+        qp.end()
+
 
     def createFieldImage(self):
-        pix = QPixmap(self.central.width, self.central.height)
+        self.fieldImage = QPixmap(self.central.width, self.central.height)
         qp = QPainter()
-        qp.begin(pix)
+        qp.begin(self.fieldImage)
         qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
 
@@ -149,28 +144,6 @@ class Movie(QMainWindow):
         qp.drawEllipse(QPoint(0, 0), 5, 5)
         qp.end()
 
-        return pix
-
-
-
-    def drawBalls(self):
-        qp = QPainter()
-        qp.begin(self)
-        qp.translate(self.central.width / 2, self.central.height / 2)
-        qp.scale(1, -1)
-
-        qp.setPen(TRACK_COLOR)
-        for b in self.central.balls:
-            for p in b.points:
-                qp.drawPoint(p)
-
-        qp.setPen(BALL_COLOR)
-        qp.setBrush(BALL_COLOR)
-        r = 10
-        for b in self.central.balls:
-            qp.drawEllipse(QPoint(b.x, b.y), r, r)
-
-        qp.end()
 
 # ========================================== Main
 

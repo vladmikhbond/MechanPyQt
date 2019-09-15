@@ -2,24 +2,15 @@
 > C:\Git\MechanPyQt\venv\Lib\site-packages\pyqt5_tools\Qt\bin\designer.exe
 > C:\Git\MechanPyQt\venv\Scripts\pyuic5.exe ui\mainForm.ui -o ui\mainForm.py
 
-TODO
-след оставлять на битмапе
-
-
+Потенциалы
 100 / r  - потенциал поля тяготения
 -0.00005 * r**2 - резиновая нить
-
-
 5000 / r**2 - сила обратно пропорц. кубу расстояния - неуст.орбиты
-
-100 / r**1.1
-
+100 / r**1.1 - ??
 
 
-
-
-
-
+TODO
+handle exceptions
 
 
 
