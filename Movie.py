@@ -7,14 +7,16 @@ from Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
 
 T_INTERVAL = 20
-TRACK_COLOR = QColor(0, 0, 0)
-BALL_COLOR = QColor(255, 0, 0)
+TRACK_COLOR = QColor('black')
+BALL_COLOR = QColor('red')
+SUN_COLOR = QColor('yellow')
 
 
 class Movie(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.backImage = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -23,7 +25,6 @@ class Movie(QMainWindow):
         # init timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.step)
-        self.timer.start(T_INTERVAL)
 
         # init model
         self.width()
@@ -34,7 +35,7 @@ class Movie(QMainWindow):
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.okBtnClicked()
 
-        self.pixmap = None
+
 
     # ========================================== Handlers
 
@@ -54,7 +55,7 @@ class Movie(QMainWindow):
         text = self.ui.potential.toPlainText()
         text = text.replace("r", "((x*x + y*y)**0.5)")
         self.central.refresh(text)
-        self.pixmap = self.pm()
+        self.backImage = self.createBackImage()
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
@@ -71,31 +72,32 @@ class Movie(QMainWindow):
             self.central.step()
         self.repaint()
 
-        # full energy diagnostic
+        # energy diagnostic
+
         e = self.central.T() - self.central.v()
-        self.setWindowTitle(f'E = {e:8.3f}')
+        self.setWindowTitle(f'E = {e:12.8f}')
 
     # ========================================== Painting
 
     def paintEvent(self, event):
         self.drawBack()
-        self.drawFore()
+        self.drawFront()
 
     def drawBack(self):
-        if self.pixmap:
+        if self.backImage:
             qp = QPainter()
             qp.begin(self)
-            qp.drawPixmap(0, 0, self.pixmap)
+            qp.drawPixmap(0, 0, self.backImage)
             qp.end()
 
-    def pm(self):
+    def createBackImage(self):
         pix = QPixmap(self.central.width, self.central.height)
         qp = QPainter()
         qp.begin(pix)
         qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
 
-        qp.setPen(QColor(0xCC, 0xCC, 0xCC))
+        # qp.setPen(QColor(0xCC, 0xCC, 0xCC))
         dx = 10
         xLimit = round(self.central.width / 1.00)
         xs = [x for x in range(1, xLimit, dx)]
@@ -108,25 +110,21 @@ class Movie(QMainWindow):
             pen = QPen(QBrush(QColor(color, color, 255)), dx + 1)
             qp.setPen(pen)
             qp.drawEllipse(QPoint(0, 0), x, x)
+
+        # draw Center
+        qp.setPen(QPen(QBrush(BALL_COLOR), 1))
+        qp.setBrush(SUN_COLOR)
+        qp.drawEllipse(QPoint(0, 0), 5, 5)
         qp.end()
+
         return pix
 
-
-
-    def drawFore(self):
+    def drawFront(self):
         qp = QPainter()
-
         qp.begin(self)
         qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
-        # draw Center
-        qp.setBrush(BALL_COLOR)
-        qp.drawEllipse(QPoint(0, 0), 5, 5)
 
-        self.drawBalls(qp)
-        qp.end()
-
-    def drawBalls(self, qp):
         qp.setPen(TRACK_COLOR)
         for b in self.central.balls:
             for p in b.points:
@@ -137,6 +135,8 @@ class Movie(QMainWindow):
         r = 10
         for b in self.central.balls:
             qp.drawEllipse(QPoint(b.x, b.y), r, r)
+
+        qp.end()
 
 # ========================================== Main
 
