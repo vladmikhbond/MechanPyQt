@@ -1,12 +1,6 @@
-терминал на работе
+утилиты
 > C:\Git\MechanPyQt\venv\Lib\site-packages\pyqt5_tools\Qt\bin\designer.exe
 > C:\Git\MechanPyQt\venv\Scripts\pyuic5.exe ui\mainForm.ui -o ui\mainForm.py
-
-терминал на домашнем компе  ???
-> C:\Users\vladm\PycharmProjects\untitled\venv\Lib\site-packages\pyqt5_tools\Qt\bin\designer.exe
-> C:\Users\vladm\PycharmProjects\untitled\venv\Scripts\pyuic5.exe ui\mainForm.ui -o ui\mainForm.py
-
-
 
 TODO
 строить фон по-честному, путем вычислений
