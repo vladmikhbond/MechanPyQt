@@ -1,13 +1,12 @@
-import math
 from PyQt5.QtCore import QPoint
-from Central import dV_dx, dV_dy, Central
+from model.Central import dV_dx, dV_dy, Central
 
 
 POINTS_COUNT = 10000
 
 class Ball:
 
-    def __init__(self, x, y, vx, vy):
+    def __init__(self, x=0, y=0, vx=0, vy=0):
         self.x = x
         self.y = y
         self.vx = vx
