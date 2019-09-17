@@ -94,22 +94,19 @@ class Movie(QMainWindow):
             qp.drawEllipse(QPoint(b.x, b.y), r, r)
         qp.end()
 
-        # tracks
-        qp = QPainter()
-        qp.begin(self.fieldImage)
-        qp.translate(self.central.width / 2, self.central.height / 2)
-        qp.scale(1, -1)
-        qp.setPen(TRACK_COLOR)
-
-
+        # tracks to image
+        qpi = QPainter()
+        qpi.begin(self.fieldImage)
+        qpi.translate(self.central.width / 2, self.central.height / 2)
+        qpi.scale(1, -1)
+        qpi.setPen(TRACK_COLOR)
         for b in self.central.balls:
-            if b.shadowX:
-                qp.drawLine(b.x, b.y, b.shadowX, b.shadowY)
-            b.shadowX = b.x
-            b.shadowY = b.y
+            if b.prevX:
+                qpi.drawLine(b.x, b.y, b.prevX, b.prevY)
+            b.prevX = b.x
+            b.prevY = b.y
 
-            # qp.drawPoint(b.x, b.y)
-        qp.end()
+        qpi.end()
 
 
     def createFieldImage(self):
@@ -122,19 +119,25 @@ class Movie(QMainWindow):
         X = self.central.width // 2 - 1
         Y = self.central.height // 2 - 1
         D = 6
-        vmin = vmax = abs(Central.V(-X, -Y))
+        vmin = vmax = Central.V(-X, -Y)
         for x in range(-X, X, D):
             for y in range(-Y, Y, D):
-                v = abs(Central.V(x, y))
+                v = Central.V(x, y)
                 if vmin > v: vmin = v
                 if vmax < v: vmax = v
-        k = 255 / (vmax - vmin) if vmax != vmin else 255
+        # k = 255 / (vmax - vmin) if vmax != vmin else 255
 
         for x in range(-X, X, D):
             for y in range(-Y, Y, D):
                 v = Central.V(x, y)
-                color = 255 - k * (abs(v) - vmin)
-                qcolor = QColor(color, color, 255)
+                if v > 0:
+                    color = 255 - 255 * (v - vmin) / (vmax - vmin)
+                    qcolor = QColor(color, 255, color)
+                else:
+                    color = 255 * (v - vmin) / (vmax - vmin)
+                    qcolor = QColor(color, color,  255)
+                # color = 255 - k * (v - vmin)
+                # qcolor = QColor(color, color, 255)
                 qp.setPen(qcolor)
                 qp.setBrush(qcolor)
                 qp.drawRect(x - D/2, y - D/2, D, D)
@@ -143,6 +146,15 @@ class Movie(QMainWindow):
         qp.setPen(QPen(QBrush(BALL_COLOR), 1))
         qp.setBrush(SUN_COLOR)
         qp.drawEllipse(QPoint(0, 0), 5, 5)
+
+        ###
+        qp.setPen(QColor(0, 0, 0))
+        ps = [QPoint(x, Central.V(x, 0))for x in range(D, X, D)]
+
+        qp.drawPolyline(*ps)
+
+
+
         qp.end()
 
 

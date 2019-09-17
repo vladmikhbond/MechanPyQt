@@ -15,8 +15,8 @@ class Ball:
         self.fy = 0
         self.m = 1
 
-        self.shadowX = None
-        self.shadowY = None
+        self.prevX = None
+        self.prevY = None
         self.owner = None
 
     def force(self):
@@ -38,8 +38,8 @@ class Ball:
         b.y = o['y']
         b.vx = o['vx']
         b.vy = o['vy']
-        b.shadowX = None
-        b.shadowY = None
+        b.prevX = None
+        b.prevY = None
 
     def r(self):
         return (self.x * self.x + self.y * self.y) ** 0.5
