@@ -73,7 +73,7 @@ class Movie(QMainWindow):
 
         # energy diagnostic
 
-        e = self.central.T() - self.central.v()
+        e = self.central.T() + self.central.v()
         self.setWindowTitle(f'E = {e:12.8f}')
 
     # ========================================== Painting

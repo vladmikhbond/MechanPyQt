@@ -20,8 +20,8 @@ class Ball:
         self.owner = None
 
     def force(self):
-        self.fx = dV_dx(self.x, self.y)
-        self.fy = dV_dy(self.x, self.y)
+        self.fx = - dV_dx(self.x, self.y)
+        self.fy = - dV_dy(self.x, self.y)
 
     def move(self):
         ax = self.fx / self.m
