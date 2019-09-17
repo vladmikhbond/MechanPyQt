@@ -36,7 +36,31 @@ class Central:
         self.balls.append(ball)
 
     def refresh(self, text):
-        Central.V = eval("lambda x, y: " + text)
+        text = text.replace("r", "((x*x + y*y)**0.5)")
+        f = eval("lambda x, y: " + text)
+
+        if self.isValid(f):
+            Central.V = f
+            return True
+        return False
+
+
+    def isValid(self, f):
+        X = self.width // 2 - 1
+        Y = self.height // 2 - 1
+        D = 6
+        try:
+            for x in range(-X, X, D):
+                for y in range(-Y, Y, D):
+                    f(x, y)
+        except:
+            return False
+        else:
+            return True
+
+
+
+
 
     def T(self):
         return sum(b.T() for b in self.balls)

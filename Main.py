@@ -51,9 +51,10 @@ class Movie(QMainWindow):
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
-        text = text.replace("r", "((x*x + y*y)**0.5)")
-        self.central.refresh(text)
-        self.createFieldImage()
+        if self.central.refresh(text):
+            self.createFieldImage()
+        else:
+            print("ERROR")
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
@@ -62,7 +63,7 @@ class Movie(QMainWindow):
 
     def step(self):
         # stop timer when a ball is far away
-        if self.central.balls[0].r() > self.central.width:
+        if self.central.balls[0].r() > self.central.width * 2:
             self.timer.stop()
 
         # many steps and one painting
@@ -127,7 +128,7 @@ class Movie(QMainWindow):
                 v = abs(Central.V(x, y))
                 if vmin > v: vmin = v
                 if vmax < v: vmax = v
-        k = 255 / (vmax - vmin)
+        k = 255 / (vmax - vmin) if vmax != vmin else 255
 
         for x in range(-X, X, D):
             for y in range(-Y, Y, D):
