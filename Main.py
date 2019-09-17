@@ -1,4 +1,5 @@
-import sys, math
+import sys
+import math
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap
 from PyQt5.QtCore import QTimer, QPoint
@@ -40,7 +41,7 @@ class Movie(QMainWindow):
     def mousePressEvent(self, event):
         p = self.central.ScreenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
-        print(p.x(), p.y(), v)
+        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f}')
 
         # toggle timer
         if self.timer.isActive():
@@ -72,11 +73,10 @@ class Movie(QMainWindow):
         self.repaint()
 
         # energy diagnostic
-
         e = self.central.T() + self.central.v()
         self.setWindowTitle(f'E = {e:12.8f}')
 
-    # ========================================== Painting
+    # ========================================== Drawing
 
     def paintEvent(self, event):
         qp = QPainter()
@@ -108,7 +108,6 @@ class Movie(QMainWindow):
 
         qpi.end()
 
-
     def createFieldImage(self):
         self.fieldImage = QPixmap(self.central.width, self.central.height)
         qp = QPainter()
@@ -116,44 +115,44 @@ class Movie(QMainWindow):
         qp.translate(self.central.width / 2, self.central.height / 2)
         qp.scale(1, -1)
 
-        X = self.central.width // 2 - 1
-        Y = self.central.height // 2 - 1
-        D = 6
-        vmin = vmax = Central.V(-X, -Y)
-        for x in range(-X, X, D):
-            for y in range(-Y, Y, D):
+        w = self.central.width // 2 - 1
+        h = self.central.height // 2 - 1
+        d = 6
+        v_min = v_max = Central.V(-w, -h)
+        for x in range(-w, w, d):
+            for y in range(-h, h, d):
                 v = Central.V(x, y)
-                if vmin > v: vmin = v
-                if vmax < v: vmax = v
-        # k = 255 / (vmax - vmin) if vmax != vmin else 255
+                if v_min > v:
+                    v_min = v
+                if v_max < v:
+                    v_max = v
+        if v_max == v_min:
+            return
 
-        for x in range(-X, X, D):
-            for y in range(-Y, Y, D):
+        for x in range(-w, w, d):
+            for y in range(-h, h, d):
                 v = Central.V(x, y)
-                if v > 0:
-                    color = 255 - 255 * (v - vmin) / (vmax - vmin)
-                    qcolor = QColor(color, 255, color)
-                else:
-                    color = 255 * (v - vmin) / (vmax - vmin)
-                    qcolor = QColor(color, color,  255)
-                # color = 255 - k * (v - vmin)
-                # qcolor = QColor(color, color, 255)
-                qp.setPen(qcolor)
-                qp.setBrush(qcolor)
-                qp.drawRect(x - D/2, y - D/2, D, D)
+                color = 255 - 255 * (v - v_min) / (v_max - v_min)
+                q_color = QColor(color, color,  255)
+
+                qp.setPen(q_color)
+                qp.setBrush(q_color)
+                qp.drawRect(x - d/2, y - d/2, d, d)
 
         # draw Center
         qp.setPen(QPen(QBrush(BALL_COLOR), 1))
         qp.setBrush(SUN_COLOR)
         qp.drawEllipse(QPoint(0, 0), 5, 5)
 
-        ###
-        qp.setPen(QColor(0, 0, 0))
-        ps = [QPoint(x, Central.V(x, 0))for x in range(D, X, D)]
-
+        # draw V-profile
+        qp.setPen(QColor(128, 128, 128))
+        xs = range(d, w, d)
+        vs = [Central.V(x, 0) for x in xs]
+        v_min, v_max = min(*vs), max(*vs)
+        k = 255 / (v_max - v_min)
+        ns = [(v - v_min) * k for v in vs]
+        ps = [QPoint(x, n) for x, n in zip(xs, ns)]
         qp.drawPolyline(*ps)
-
-
 
         qp.end()
 

@@ -1,3 +1,4 @@
+import math
 DELTA = 0.001
 from PyQt5.QtCore import QTimer, QPoint, Qt
 
