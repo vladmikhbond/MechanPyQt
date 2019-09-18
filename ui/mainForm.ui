@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>800</height>
+    <width>836</width>
+    <height>936</height>
    </rect>
   </property>
   <property name="font">
@@ -24,7 +24,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>781</width>
+      <width>801</width>
       <height>91</height>
      </rect>
     </property>
@@ -57,7 +57,7 @@
       <rect>
        <x>70</x>
        <y>10</y>
-       <width>611</width>
+       <width>641</width>
        <height>31</height>
       </rect>
      </property>
@@ -88,7 +88,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="okButton">
      <property name="geometry">
       <rect>
-       <x>700</x>
+       <x>720</x>
        <y>10</y>
        <width>71</width>
        <height>71</height>
@@ -103,7 +103,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>70</x>
        <y>50</y>
-       <width>611</width>
+       <width>641</width>
        <height>31</height>
       </rect>
      </property>
@@ -145,14 +145,27 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="fieldWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>800</width>
+      <height>800</height>
+     </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>41</height>
+     <width>836</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>
