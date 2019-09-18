@@ -59,12 +59,3 @@ class Central:
         else:
             return True
 
-
-
-
-
-    def T(self):
-        return sum(b.T() for b in self.balls)
-
-    def v(self):
-        return sum(b.V() for b in self.balls)

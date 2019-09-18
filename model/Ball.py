@@ -15,8 +15,10 @@ class Ball:
         self.fy = 0
         self.m = 1
 
-        self.prevX = None
-        self.prevY = None
+        self._x = None
+        self._y = None
+        self._vx = None
+        self._vy = None
         self.owner = None
 
     def force(self):
@@ -24,6 +26,11 @@ class Ball:
         self.fy = - dV_dy(self.x, self.y)
 
     def move(self):
+        self._x = self.x
+        self._y = self.y
+        self._vx = self.vx
+        self._vy = self.vy
+
         ax = self.fx / self.m
         ay = self.fy / self.m
         self.vx += ax
@@ -33,13 +40,12 @@ class Ball:
 
     def refresh(self, text):
         o = eval('{' + text + '}')
-        b = self;
-        b.x = o['x']
-        b.y = o['y']
-        b.vx = o['vx']
-        b.vy = o['vy']
-        b.prevX = None
-        b.prevY = None
+        self.x = o['x']
+        self.y = o['y']
+        self.vx = o['vx']
+        self.vy = o['vy']
+        self._x = None
+
 
     def r(self):
         return (self.x * self.x + self.y * self.y) ** 0.5
@@ -49,3 +55,15 @@ class Ball:
 
     def V(self):
         return Central.V(self.x, self.y)
+
+
+    def lagrangian(self):
+        px, py = self.m * self.vx, self.m * self.vy
+        p_x, p_y = self.m * self._vx, self.m * self._vy
+        one = (px - p_x) / 1 + (py - p_y) / 1
+
+        dV_dx = (Central.V(self.x, self.y) - Central.V(self._x, self.y)) / (self.x - self._x)
+        dV_dy = (Central.V(self.x, self.y) - Central.V(self.x, self._y)) / (self.y - self._y)
+        two = dV_dx + dV_dy
+
+        return f'{one :12.8f}   {two :12.8f}    {one + two :12.8f}'

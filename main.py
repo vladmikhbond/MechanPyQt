@@ -77,8 +77,8 @@ class Main(QMainWindow):
         self.fieldWidget.repaint()
 
         # energy diagnostic
-        e = self.model.T() + self.model.v()
-        self.setWindowTitle(f'E = {e:12.8f}')
+        b = self.model.balls[0];
+        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   eqLagr = {b.lagrangian()}')
 
 
 if __name__ == '__main__':
