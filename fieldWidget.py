@@ -16,8 +16,6 @@ class FieldWidget(QWidget):
         self.fieldImage = None
 
     def paintEvent(self, event):
-
-
         qp = QPainter()
         qp.begin(self)
         if self.fieldImage:
