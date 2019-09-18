@@ -1,16 +1,13 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtGui import QColor
 from PyQt5.QtCore import QTimer, QRect
 from model.Ball import Ball
 from model.Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
 from fieldWidget import FieldWidget
 
+
 T_INTERVAL = 20
-TRACK_COLOR = QColor('red')
-BALL_COLOR = QColor('red')
-SUN_COLOR = QColor('yellow')
 
 
 class Main(QMainWindow):
@@ -21,15 +18,13 @@ class Main(QMainWindow):
         # init model
         self.model = Central(800, 800, Ball())
 
+        # init UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
         self.fieldWidget = FieldWidget(self, self.model)
         self.fieldWidget.setGeometry(QRect(10, 110, self.model.width, self.model.height))
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
-
-
         self.show()
 
         # init timer
@@ -40,6 +35,7 @@ class Main(QMainWindow):
         self.setMouseTracking(True)
         self.ui.okButton.clicked.connect(self.okBtnClicked)
 
+        # first time drawing
         self.okBtnClicked()
 
     # ========================================== Handlers
@@ -77,7 +73,7 @@ class Main(QMainWindow):
         # many steps and one painting
         for i in range(10):
             self.model.step()
-        # self.repaint()
+
         self.fieldWidget.repaint()
 
         # energy diagnostic

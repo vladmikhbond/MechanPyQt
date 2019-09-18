@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import QWidget
 from model.Central import Central
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap
-from PyQt5.QtCore import QTimer, QPoint, QRect
+from PyQt5.QtCore import QPoint
 
 TRACK_COLOR = QColor('red')
 BALL_COLOR = QColor('red')
 SUN_COLOR = QColor('yellow')
+V_PROF_COLOR = QColor(128, 128, 128)
 
 class FieldWidget(QWidget):
 
@@ -53,8 +54,8 @@ class FieldWidget(QWidget):
         qp.translate(self.model.width / 2, self.model.height / 2)
         qp.scale(1, -1)
 
-        w = self.model.width // 2 - 1
-        h = self.model.height // 2 - 1
+        w = self.model.width // 2
+        h = self.model.height // 2
         d = 6
         v_min = v_max = Central.V(-w, -h)
         for x in range(-w, w, d):
@@ -77,13 +78,13 @@ class FieldWidget(QWidget):
                 qp.setBrush(q_color)
                 qp.drawRect(x - d/2, y - d/2, d, d)
 
-        # draw Center
+        # draw center
         qp.setPen(QPen(QBrush(BALL_COLOR), 1))
         qp.setBrush(SUN_COLOR)
         qp.drawEllipse(QPoint(0, 0), 5, 5)
 
         # draw V-profile
-        qp.setPen(QColor(128, 128, 128))
+        qp.setPen(V_PROF_COLOR)
         xs = range(d, w, d)
         vs = [Central.V(x, 0) for x in xs]
         v_min, v_max = min(*vs), max(*vs)
