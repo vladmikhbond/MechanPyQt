@@ -38,10 +38,10 @@ class FieldWidget(QWidget):
         qpi.scale(1, -1)
         qpi.setPen(TRACK_COLOR)
         for b in self.model.balls:
-            if hasattr(b, 'prevX'):
-                qpi.drawLine(b.x, b.y, b.prevX,b.prevY)
-            b.prevX = b.x
-            b.prevY = b.y
+            if b.drawX:
+                qpi.drawLine(b.x, b.y, b.drawX, b.drawY)
+            b.drawX = b.x
+            b.drawY = b.y
 
         qpi.end()
 

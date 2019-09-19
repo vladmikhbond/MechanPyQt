@@ -7,6 +7,7 @@ from ui.mainForm import Ui_MainWindow  # импорт нашего сгенер�
 from fieldWidget import FieldWidget
 
 
+FIELD_SIDE = 800
 T_INTERVAL = 20
 
 
@@ -16,7 +17,7 @@ class Main(QMainWindow):
         super().__init__()
 
         # init model
-        self.model = Central(800, 800, Ball())
+        self.model = Central(FIELD_SIDE, FIELD_SIDE, Ball())
 
         # init UI
         self.ui = Ui_MainWindow()
@@ -55,14 +56,14 @@ class Main(QMainWindow):
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
-        if self.model.refresh(text):
+        if self.model.reset(text):
             self.fieldWidget.createFieldImage()
         else:
             print("ERROR")
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
-        self.model.balls[0].refresh(text)
+        self.model.balls[0].reset(text)
         self.timer.start(T_INTERVAL)
 
     def step(self):
@@ -76,10 +77,10 @@ class Main(QMainWindow):
 
         self.fieldWidget.repaint()
 
-        # energy diagnostic
-        b = self.model.balls[0];
+        # diagnostic: Energy and Lagrangian
+        b = self.model.balls[0]
         o = b.lagrangian()
-        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = {o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f}')
+        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = ({o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f})')
 
 
 if __name__ == '__main__':

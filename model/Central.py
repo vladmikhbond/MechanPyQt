@@ -36,7 +36,7 @@ class Central:
         ball.owner = self
         self.balls.append(ball)
 
-    def refresh(self, text):
+    def reset(self, text):
         text = text.replace("r", "((x*x + y*y)**0.5)")
         f = eval("lambda x, y: " + text)
 

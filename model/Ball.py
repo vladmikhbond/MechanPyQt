@@ -1,9 +1,6 @@
 from PyQt5.QtCore import QPoint
 from model.Central import dV_dx, dV_dy, Central
 
-
-POINTS_COUNT = 10000
-
 class Ball:
 
     def __init__(self, x=0, y=0, vx=0, vy=0):
@@ -20,6 +17,7 @@ class Ball:
         self._vx = None
         self._vy = None
         self.owner = None
+        self.drawX = None
 
     def force(self):
         self.fx = - dV_dx(self.x, self.y)
@@ -38,14 +36,14 @@ class Ball:
         self.x += self.vx
         self.y += self.vy
 
-    def refresh(self, text):
+    def reset(self, text):
         o = eval('{' + text + '}')
         self.x = o['x']
         self.y = o['y']
         self.vx = o['vx']
         self.vy = o['vy']
         self._x = None
-
+        self.drawX = None
 
     def r(self):
         return (self.x * self.x + self.y * self.y) ** 0.5
