@@ -78,7 +78,8 @@ class Main(QMainWindow):
 
         # energy diagnostic
         b = self.model.balls[0];
-        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   eqLagr = {b.lagrangian()}')
+        o = b.lagrangian()
+        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = {o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f}')
 
 
 if __name__ == '__main__':

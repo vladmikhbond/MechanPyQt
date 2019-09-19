@@ -60,10 +60,11 @@ class Ball:
     def lagrangian(self):
         px, py = self.m * self.vx, self.m * self.vy
         p_x, p_y = self.m * self._vx, self.m * self._vy
-        one = (px - p_x) / 1 + (py - p_y) / 1
+        dpx_dt, dpy_dt = (px - p_x) / 1, (py - p_y) / 1
 
         dV_dx = (Central.V(self.x, self.y) - Central.V(self._x, self.y)) / (self.x - self._x)
         dV_dy = (Central.V(self.x, self.y) - Central.V(self.x, self._y)) / (self.y - self._y)
-        two = dV_dx + dV_dy
+        return [
+            dpx_dt, dV_dx,
+            dpy_dt, dV_dy ]
 
-        return f'{one :12.8f}   {two :12.8f}    {one + two :12.8f}'
