@@ -10,8 +10,8 @@ V_PROF_COLOR = QColor(128, 128, 128)
 
 class FieldWidget(QWidget):
 
-    def __init__(self, owner, model):
-        super().__init__(owner)
+    def __init__(self, parent, model):
+        super().__init__(parent)
         self.model = model
         self.fieldImage = None
 
@@ -59,26 +59,27 @@ class FieldWidget(QWidget):
         d = 6
 
         # draw potential
-        v_min = v_max = Central.V(-w, -h)
-        for x in range(-w, w, d):
-            for y in range(-h, h, d):
-                v = Central.V(x, y)
-                if v_min > v:
-                    v_min = v
-                if v_max < v:
-                    v_max = v
-        if v_max == v_min:
-            return
 
-        for x in range(-w, w, d):
-            for y in range(-h, h, d):
-                v = Central.V(x, y)
-                color = 255 - 255 * (v - v_min) / (v_max - v_min)
-                q_color = QColor(color, color,  255)
-
-                qp.setPen(q_color)
-                qp.setBrush(q_color)
-                qp.drawRect(x - d/2, y - d/2, d, d)
+        # v_min = v_max = Central.V(-w, -h)
+        # for x in range(-w, w, d):
+        #     for y in range(-h, h, d):
+        #         v = Central.V(x, y)
+        #         if v_min > v:
+        #             v_min = v
+        #         if v_max < v:
+        #             v_max = v
+        # if v_max == v_min:
+        #     return
+        #
+        # for x in range(-w, w, d):
+        #     for y in range(-h, h, d):
+        #         v = Central.V(x, y)
+        #         color = 255 - 255 * (v - v_min) / (v_max - v_min)
+        #         q_color = QColor(color, color,  255)
+        #
+        #         qp.setPen(q_color)
+        #         qp.setBrush(q_color)
+        #         qp.drawRect(x - d/2, y - d/2, d, d)
 
         # draw center
         qp.setPen(QPen(QBrush(BALL_COLOR), 1))

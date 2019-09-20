@@ -5,6 +5,7 @@ from model.Ball import Ball
 from model.Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
 from fieldWidget import FieldWidget
+from glWidget import GLWidget
 
 
 FIELD_SIDE = 800
@@ -22,10 +23,17 @@ class Main(QMainWindow):
         # init UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.glWidget = GLWidget(self, self.model)
+        self.glWidget.setGeometry(QRect(10, 110, self.model.width, self.model.height))
+        # self.glWidget.setMouseTracking(True)
+        self.glWidget.setObjectName("glWidget")
+
         self.fieldWidget = FieldWidget(self, self.model)
         self.fieldWidget.setGeometry(QRect(10, 110, self.model.width, self.model.height))
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
+
         self.show()
 
         # init timer
