@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 from model.Central import Central
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap
-from PyQt5.QtCore import QPoint
+from PyQt5.QtCore import QPoint, Qt
 
 TRACK_COLOR = QColor('red')
 BALL_COLOR = QColor('red')
@@ -46,15 +46,19 @@ class FieldWidget(QWidget):
         qpi.end()
 
     def createFieldImage(self):
-        self.fieldImage = QPixmap(self.model.width, self.model.height)
+        pix = QPixmap(self.model.width, self.model.height)
+        pix.fill(Qt.transparent)
+
         qp = QPainter()
-        qp.begin(self.fieldImage)
+        qp.begin(pix)
         qp.translate(self.model.width / 2, self.model.height / 2)
         qp.scale(1, -1)
 
         w = self.model.width // 2
         h = self.model.height // 2
         d = 6
+
+        # draw potential
         v_min = v_max = Central.V(-w, -h)
         for x in range(-w, w, d):
             for y in range(-h, h, d):
@@ -92,3 +96,4 @@ class FieldWidget(QWidget):
         qp.drawPolyline(*ps)
 
         qp.end()
+        self.fieldImage = pix
