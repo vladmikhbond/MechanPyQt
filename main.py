@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtCore import QTimer, QRect
+from PyQt5.QtCore import QTimer, QRect, QPoint
 from model.Ball import Ball
 from model.Central import Central
 from ui.mainForm import Ui_MainWindow  # импорт нашего сгенерированного файла
@@ -52,15 +52,24 @@ class Main(QMainWindow):
 
     def mousePressEvent(self, event):
         # diagnostic print
-        p = self.model.ScreenToWorld(event.pos())
+        p = self.ScreenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
-        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f}')
+        n = v * self.model.K
+        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} n={n:0.4f}')
 
         # toggle timer
         if self.timer.isActive():
             self.timer.stop()
         else:
             self.timer.start(T_INTERVAL)
+
+    def ScreenToWorld(self, cur: QPoint):
+        x0, y0 = self.model.width / 2, self.model.height / 2
+        x = cur.x() - self.fieldWidget.geometry().x()
+        y = cur.y() - self.fieldWidget.geometry().y()
+        return QPoint(x - x0, y0 - y )
+
+
 
     def okBtnClicked(self):
         # renew potential

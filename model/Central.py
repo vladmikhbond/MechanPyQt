@@ -15,9 +15,9 @@ class Central:
     V = lambda x, y: 0
 
 
-    def ScreenToWorld(self, p: QPoint):
-        x0, y0 = self.width / 2, self.height / 2
-        return QPoint(p.x() - x0, y0 - p.y() )
+    # def ScreenToWorld(self, p: QPoint):
+    #     x0, y0 = self.width / 2, self.height / 2
+    #     return QPoint(p.x() - x0, y0 - p.y() )
 
     def __init__(self, width, height, cell, *balls):
         self.width = width

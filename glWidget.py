@@ -19,14 +19,14 @@ class GLWidget(QOpenGLWidget):
         gl.glEnable(gl.GL_LIGHTING);
         ambientLight = [0.2, 0.2, 0.2, 1.0];
         diffuseLight = [0.99, 0.99, 0.99, 1.0];
-        lightPos = [0, 0, 1000, 1];
+        lightPos = [0, 0, 400, 0];
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, ambientLight);
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, diffuseLight);
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos);
         gl.glEnable(gl.GL_LIGHT0);
-        gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
 
-        gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.3, 0.3, 0.3, 1.0])
+        gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
+        gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.9, 0.9, 0.9, 1.0])
 
         print(gl.glGetString(gl.GL_EXTENSIONS))
 
