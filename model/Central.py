@@ -1,6 +1,6 @@
 import math
 DELTA = 0.001
-from PyQt5.QtCore import QTimer, QPoint, Qt
+from PyQt5.QtCore import QPoint
 
 def dV_dx(x, y):
     return (Central.V(x + DELTA, y) - Central.V(x - DELTA, y)) / (2 * DELTA)
@@ -19,10 +19,11 @@ class Central:
         x0, y0 = self.width / 2, self.height / 2
         return QPoint(p.x() - x0, y0 - p.y() )
 
-    def __init__(self, width, height, *balls):
+    def __init__(self, width, height, cell, *balls):
         self.width = width
         self.height = height
         self.balls = []
+        self.cell = cell
         for b in balls:
             self.addBall(b)
 
@@ -38,24 +39,21 @@ class Central:
 
     def reset(self, text):
         text = text.replace("r", "((x*x + y*y)**0.5)")
-        f = eval("lambda x, y: " + text)
+        Central.V = eval("lambda x, y: " + text)
 
-        if self.isValid(f):
-            Central.V = f
-            return True
-        return False
+    def getK(self):
+        w = self.width // 2
+        h = self.height // 2
+        d = self.cell
 
-
-    def isValid(self, f):
-        X = self.width // 2 - 1
-        Y = self.height // 2 - 1
-        D = 6
-        try:
-            for x in range(-X, X, D):
-                for y in range(-Y, Y, D):
-                    f(x, y)
-        except:
-            return False
-        else:
-            return True
-
+        v_min = v_max = Central.V(-w, -h)
+        for x in range(-w, w, d):
+            for y in range(-h, h, d):
+                v = Central.V(x, y)
+                if v_min > v:
+                    v_min = v
+                if v_max < v:
+                    v_max = v
+        if v_max == v_min:
+            return 0
+        return 100 / (v_max - v_min)

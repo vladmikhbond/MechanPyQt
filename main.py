@@ -10,6 +10,7 @@ from glWidget import GLWidget
 
 FIELD_SIDE = 800
 T_INTERVAL = 20
+CELL = 6
 
 
 class Main(QMainWindow):
@@ -18,7 +19,7 @@ class Main(QMainWindow):
         super().__init__()
 
         # init model
-        self.model = Central(FIELD_SIDE, FIELD_SIDE, Ball())
+        self.model = Central(FIELD_SIDE, FIELD_SIDE, CELL, Ball())
 
         # init UI
         self.ui = Ui_MainWindow()
@@ -64,10 +65,11 @@ class Main(QMainWindow):
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
-        if self.model.reset(text):
-            self.fieldWidget.createFieldImage()
-        else:
-            print("ERROR")
+        self.model.reset(text)   #todo: danger - div by zero
+
+        self.fieldWidget.createFieldImage()
+        self.glWidget.repaint()
+
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
