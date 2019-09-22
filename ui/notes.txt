@@ -14,7 +14,7 @@
 -1000 / abs(x-y) if x != y else 0 - полет по синусоиде
 10 *  math.sin((x - y)/ 50)
 math.log(r)
-
+10 *  math.sin(r/ 50)
 TODO
 second ball (green)
 потенциал в 3D

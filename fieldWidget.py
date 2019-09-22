@@ -57,14 +57,12 @@ class FieldWidget(QWidget):
 
         w = self.model.width // 2
         d = self.model.cell
-        qp.setPen(V_PROF_COLOR)
-        xs = range(d, w, d)
-        vs = [Central.V(x, 0) for x in xs]
-        v_min, v_max = min(*vs), max(*vs)
-        if v_max != v_min:
-            k = 255 / (v_max - v_min)
-            ns = [(v - v_min) * k for v in vs]
-            ps = [QPoint(x, n) for x, n in zip(xs, ns)]
+        k = self.model.K * 4
+        if k != 0:
+            qp.setPen(V_PROF_COLOR)
+            xs = range(d, w, d)
+            vs = [Central.V(x, 0) * k for x in xs]
+            ps = [QPoint(x, v) for x, v in zip(xs, vs)]
             qp.drawPolyline(*ps)
         qp.end()
 

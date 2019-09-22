@@ -20,8 +20,8 @@ class GLWidget(QOpenGLWidget):
         ambientLight = [0.2, 0.2, 0.2, 1.0];
         diffuseLight = [0.99, 0.99, 0.99, 1.0];
         lightPos = [0, 0, 1000, 0];
-        # gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, ambientLight);
-        # gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, diffuseLight);
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, ambientLight);
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, diffuseLight);
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos);
         gl.glEnable(gl.GL_LIGHT0);
         gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
@@ -40,20 +40,9 @@ class GLWidget(QOpenGLWidget):
         w = self.model.width // 2
         h = self.model.height // 2
         d = self.model.cell
-        k = self.model.getK() * 4
+        k = self.model.K * 4
         if not k:
             return
-        # v_min = v_max = Central.V(-w, -h)
-        # for x in range(-w, w, d):
-        #     for y in range(-h, h, d):
-        #         v = Central.V(x, y)
-        #         if v_min > v:
-        #             v_min = v
-        #         if v_max < v:
-        #             v_max = v
-        # if v_max == v_min:
-        #     return
-        # k = 400 / (v_max - v_min)
 
         for y in range(-h, h, d):
             x = -w
@@ -76,24 +65,9 @@ class GLWidget(QOpenGLWidget):
                 gl.glVertex3fv(v3)
 
                 v0, v1 = v2, v3
-
-
             gl.glEnd()
 
-        # gl.glNormal3f(0, -1, 0)
-        # gl.glVertex3f(100, 100, 0)    # V2
-        #
-        #
-        # # gl.glNormal3v(v0, v1, v2)
-        # gl.glVertex3f(100, 0, 0)      # V3
-        #
-        # # gl.glColor3f(0.0, 0.0, 1.0);
-        # gl.glVertex3f(200, 100, 0)    # V4
-        #
-        # # gl.glColor3f(1.0, 0.0, 0.0);
-        # gl.glVertex3f(200, 0, 0)      # V5
-
-        gl.glPopMatrix();
+        gl.glPopMatrix()
 
     def resizeGL(self, width, height):
         side = min(width, height) / 2

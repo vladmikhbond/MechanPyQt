@@ -26,6 +26,7 @@ class Central:
         self.cell = cell
         for b in balls:
             self.addBall(b)
+        self.K = 0
 
     def step(self):
         for b in self.balls:
@@ -40,8 +41,9 @@ class Central:
     def reset(self, text):
         text = text.replace("r", "((x*x + y*y)**0.5)")
         Central.V = eval("lambda x, y: " + text)
+        self.K = self._calcK();
 
-    def getK(self):
+    def _calcK(self):
         w = self.width // 2
         h = self.height // 2
         d = self.cell
