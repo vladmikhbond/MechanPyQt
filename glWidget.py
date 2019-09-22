@@ -14,15 +14,17 @@ class GLWidget(QOpenGLWidget):
 
     def initializeGL(self):
         gl.glClearColor(0, 0, 0, 0);
-        gl.glShadeModel(gl.GL_FLAT);
+        gl.glShadeModel(gl.GL_SMOOTH);
         gl.glEnable(gl.GL_COLOR_MATERIAL);
         gl.glEnable(gl.GL_LIGHTING);
-        ambientLight = [0.2, 0.2, 0.2, 1.0];
-        diffuseLight = [0.99, 0.99, 0.99, 1.0];
-        lightPos = [0, 0, 400, 0];
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, ambientLight);
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, diffuseLight);
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos);
+        # цвета источников
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, [0.3, 0.3, 0.3, 1.0]);
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0]);
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_SPECULAR, [1, 1, 1, 1.0]);
+        # gl.glLightfv(gl.GL_LIGHT0, gl.GL_SPOT_DIRECTION, [100, 100, 0, 1.0]);
+
+        # позиция источника света
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, [-500, 0, 1000, 0]);
         gl.glEnable(gl.GL_LIGHT0);
 
         gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
