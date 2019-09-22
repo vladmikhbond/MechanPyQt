@@ -19,7 +19,7 @@ class GLWidget(QOpenGLWidget):
         gl.glEnable(gl.GL_LIGHTING);
         ambientLight = [0.2, 0.2, 0.2, 1.0];
         diffuseLight = [0.99, 0.99, 0.99, 1.0];
-        lightPos = [0, 0, 1000, 0];
+        lightPos = [0, 0, 1000, 1];
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, ambientLight);
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, diffuseLight);
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos);
