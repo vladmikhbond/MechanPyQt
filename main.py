@@ -8,9 +8,9 @@ from fieldWidget import FieldWidget
 from glWidget import GLWidget
 
 
-FIELD_SIDE = 800
+FIELD_SIDE = 600
 T_INTERVAL = 20
-CELL = 6
+CELL = 51
 
 
 class Main(QMainWindow):
