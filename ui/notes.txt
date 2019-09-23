@@ -15,16 +15,12 @@
 -1000 / abs(x-y) if x != y else 0 - полет по синусоиде
 10 *  math.sin((x - y)/ 50)
 math.log(r)
+
 10 *  math.sin(r/ 20)   <====================
+
+
 TODO
-second ball (green)
-потенциал в 3D
-
-
-
--100 / r if r > 100 else 100 / r
-
-'x': 70, 'y': 0,  'vx': -0.5,  'vy': 0.1
+separate calc from paint
 
 
 
