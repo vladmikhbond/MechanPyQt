@@ -10,7 +10,7 @@ from glWidget import GLWidget
 
 FIELD_SIDE = 600
 T_INTERVAL = 20
-CELL = 51
+CELL = 6
 
 
 class Main(QMainWindow):

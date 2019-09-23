@@ -57,7 +57,7 @@ class FieldWidget(QWidget):
 
         w = self.model.width // 2
         d = self.model.cell
-        k = self.model.K * 4
+        k = self.model.K
         if k != 0:
             qp.setPen(V_PROF_COLOR)
             xs = range(d, w, d)
