@@ -8,7 +8,7 @@ from fieldWidget import FieldWidget
 from glWidget import GLWidget
 
 
-FIELD_SIDE = 600
+FIELD_SIDE = 700
 T_INTERVAL = 20
 CELL = 6
 
@@ -26,12 +26,11 @@ class Main(QMainWindow):
         self.ui.setupUi(self)
 
         self.glWidget = GLWidget(self, self.model)
-        self.glWidget.setGeometry(QRect(10, 110, self.model.width, self.model.height))
-        # self.glWidget.setMouseTracking(True)
+        self.glWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.glWidget.setObjectName("glWidget")
 
         self.fieldWidget = FieldWidget(self, self.model)
-        self.fieldWidget.setGeometry(QRect(10, 110, self.model.width, self.model.height))
+        self.fieldWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
 
@@ -54,8 +53,8 @@ class Main(QMainWindow):
         # diagnostic print
         p = self.ScreenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
-        n = v * self.model.K
-        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} n={n:0.4f}')
+        n = (v - self.model.Vmin) * self.model.K * self.glWidget.kz
+        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} z={n:0.4f}')
 
         # toggle timer
         if self.timer.isActive():
@@ -70,19 +69,20 @@ class Main(QMainWindow):
         return QPoint(x - x0, y0 - y )
 
 
-
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
         self.model.reset(text)   #todo: danger - div by zero
-
         self.fieldWidget.createFieldImage()
         self.glWidget.repaint()
-
-
         # renew a ball
         text = self.ui.conditions.toPlainText()
         self.model.balls[0].reset(text)
+        # renew settings
+        text = self.ui.settings.toPlainText()
+        self.glWidget.reset(text)
+        self.glWidget.repaint()
+
         self.timer.start(T_INTERVAL)
 
     def step(self):

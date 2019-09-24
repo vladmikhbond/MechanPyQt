@@ -6,7 +6,7 @@ from PyQt5.QtCore import QPoint, Qt
 TRACK_COLOR = QColor('red')
 BALL_COLOR = QColor('red')
 SUN_COLOR = QColor('yellow')
-V_PROF_COLOR = QColor(128, 128, 128)
+V_PROF_COLOR = QColor('white')
 
 class FieldWidget(QWidget):
 
