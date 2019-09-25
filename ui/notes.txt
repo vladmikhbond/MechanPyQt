@@ -21,7 +21,9 @@ math.log(r)
 
 
 TODO
-separate calc from paint
+save and restore data between program calls
+sliders for light position and cam position
+image for the ball
 
 
 

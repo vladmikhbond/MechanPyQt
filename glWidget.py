@@ -23,7 +23,6 @@ class GLWidget(QOpenGLWidget):
         MAT_COLOR = [0.3, 0.3, 1]
         DIFFUSE_COLOR = [1, 1, 1, 1.0]
         AMBIENT_COLOR = [0.3, 0.3, 0.3, 1.0]
-        LIGHT_POSITION = [0, 0, 1000, 0]
 
         gl.glClearColor(0, 0, 0, 0)
         gl.glShadeModel(gl.GL_SMOOTH)
@@ -35,7 +34,6 @@ class GLWidget(QOpenGLWidget):
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, DIFFUSE_COLOR )
 
         # light: позиция источника
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, LIGHT_POSITION)
         gl.glEnable(gl.GL_LIGHT0)
 
         # материал
@@ -54,6 +52,8 @@ class GLWidget(QOpenGLWidget):
         if not self.model.K:
             return
 
+        LIGHT_POSITION = [-200, 0, 1000, 0]
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, LIGHT_POSITION)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
         gl.glMatrixMode(gl.GL_MODELVIEW)

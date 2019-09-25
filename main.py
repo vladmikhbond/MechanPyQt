@@ -12,7 +12,6 @@ FIELD_SIDE = 700
 T_INTERVAL = 20
 CELL = 6
 TEST = "100 *  math.sin(r/ 20)"
-#TEST = "0.00005 * r**2"
 
 class Main(QMainWindow):
 

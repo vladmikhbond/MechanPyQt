@@ -50,20 +50,20 @@ class FieldWidget(QWidget):
         pix.fill(Qt.transparent)
 
         # draw V-profile
-        qp = QPainter()
-        qp.begin(pix)
-        qp.translate(self.model.width / 2, self.model.height / 2)
-        qp.scale(1, -1)
-
-        w = self.model.width // 2
-        d = self.model.cell
-        k = self.model.K
-        if k != 0:
-            qp.setPen(V_PROF_COLOR)
-            xs = range(d, w, d)
-            vs = [Central.V(x, 0) * k for x in xs]
-            ps = [QPoint(x, v) for x, v in zip(xs, vs)]
-            qp.drawPolyline(*ps)
-        qp.end()
+        # qp = QPainter()
+        # qp.begin(pix)
+        # qp.translate(self.model.width / 2, self.model.height / 2)
+        # qp.scale(1, -1)
+        #
+        # w = self.model.width // 2
+        # d = self.model.cell
+        # k = self.model.K
+        # if k != 0:
+        #     qp.setPen(V_PROF_COLOR)
+        #     xs = range(d, w, d)
+        #     vs = [Central.V(x, 0) * k for x in xs]
+        #     ps = [QPoint(x, v) for x, v in zip(xs, vs)]
+        #     qp.drawPolyline(*ps)
+        # qp.end()
 
         self.fieldImage = pix
