@@ -11,7 +11,8 @@ from glWidget import GLWidget
 FIELD_SIDE = 700
 T_INTERVAL = 20
 CELL = 6
-
+TEST = "100 *  math.sin(r/ 20)"
+#TEST = "0.00005 * r**2"
 
 class Main(QMainWindow):
 
@@ -33,6 +34,9 @@ class Main(QMainWindow):
         self.fieldWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
+        #
+        self.ui.potential.setPlainText(TEST)
+        self.ui.settings.setPlainText("'kz': 1, 'phi': 0")
 
         self.show()
 

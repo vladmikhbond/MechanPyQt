@@ -1,3 +1,4 @@
+import math
 from model.Central import Central
 from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QOpenGLWidget)
 import OpenGL.GL as gl
@@ -11,16 +12,18 @@ class GLWidget(QOpenGLWidget):
         super().__init__(parent)
         self.model = model
         self.kz = 1
+        self.phi = 0
 
     def reset(self, text):
         o = eval('{' + text + '}')
         self.kz = o['kz']
+        self.phi = o['phi']
 
     def initializeGL(self):
         MAT_COLOR = [0.3, 0.3, 1]
         DIFFUSE_COLOR = [1, 1, 1, 1.0]
         AMBIENT_COLOR = [0.3, 0.3, 0.3, 1.0]
-        LIGHT_POSITION = [0.5, 0, 1, 0]
+        LIGHT_POSITION = [0, 0, 1000, 0]
 
         gl.glClearColor(0, 0, 0, 0)
         gl.glShadeModel(gl.GL_SMOOTH)
@@ -40,35 +43,48 @@ class GLWidget(QOpenGLWidget):
         gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.9, 0.9, 0.9, 1.0])
         gl.glColor3fv(MAT_COLOR)
 
-    def paintGL222(self):
+    #   v0 ---- v2
+    #   |     / |
+    #   |   /   |
+    #   | /     |
+    #   v1 ---- v3
+    def paintGL(self):
         stamp = datetime.now().timestamp()  #######
 
+        if not self.model.K:
+            return
+
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glPushMatrix()
-        gl.glEnable(gl.GL_CULL_FACE)
+         # camera
+        camY = math.sin(self.phi * math.pi / 180) * 1000
+        camZ = math.cos(self.phi * math.pi / 180) * 1000
+        glu.gluLookAt(0, camY, camZ, 0,0,0, 0,1,0)
 
         w = self.model.width // 2
         h = self.model.height // 2
         d = self.model.cell
-        k = self.model.K * 4
-        if not k:
-            return
+
+        def z(x, y):
+            return -(Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz
+
         gl.glBegin(gl.GL_TRIANGLES)
-        for x in range(-w, w + d, d):
-            for y in range(-h, h + d, d):
-                v0 = [x, y, Central.V(x, y) * k]
-                v1 = [x, y - d, Central.V(x, y - d) * k]
-                v2 = [x + d, y, Central.V(x + d, y) * k]
-                v3 = [x + d, y - d, Central.V(x + d, y - d) * k]
+        for x in range(-w+d, w, d):
+            for y in range(-h+d, h, d):
+                v0 = [x, y, z(x, y)]
+                v1 = [x, y - d, z(x, y - d)]
+                v2 = [x + d, y, z(x + d, y)]
+                v3 = [x + d, y - d, z(x + d, y - d)]
                 n012 = normcrossprod(v0, v1, v2)
                 n132 = normcrossprod(v1, v3, v2)
-
+                # v0v1v2
                 gl.glNormal3fv(n012)
                 gl.glVertex3fv(v0)
                 gl.glVertex3fv(v1)
                 gl.glVertex3fv(v2)
-
+                # v1v2v3
                 gl.glNormal3fv(n132)
                 gl.glVertex3fv(v1)
                 gl.glVertex3fv(v3)
@@ -79,12 +95,7 @@ class GLWidget(QOpenGLWidget):
 
         print(f"paintGL: {datetime.now().timestamp() - stamp}")  #######
 
-    #   v0 ---- v2
-    #   |     / |
-    #   |   /   |
-    #   | /     |
-    #   v1 ---- v3
-    def paintGL(self):
+    def paintGL_strip(self):
         stamp = datetime.now().timestamp()  #######
         if not self.model.K:
             return
@@ -93,15 +104,8 @@ class GLWidget(QOpenGLWidget):
 
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glPushMatrix()
-        # gl.glEnable(gl.GL_CULL_FACE)  #???
-
-        gl.glTranslatef(0,0,-100)
-
-        # camera
-        #glu.gluLookAt(0,0,-1000, 0,0,0, 0,1,0)
-
-
-
+         # camera
+        glu.gluLookAt(0,0,1000, 0,0,0, 0,1,0)
 
         w = self.model.width // 2
         h = self.model.height // 2
@@ -151,8 +155,8 @@ class GLWidget(QOpenGLWidget):
         # загрузка 1-матрицы
         gl.glLoadIdentity()
 
- #       gl.glOrtho(-side, side, -side, side, -1000, side)
-        glu.gluPerspective(60.0, width / height, 0, 1500 )
+        gl.glOrtho(-side, side, -side, side, -1000, 2000)
+        #glu.gluPerspective(45.0, width / height, 0, 1000 )
 
         # текущая матрица - наблюдения модели
         gl.glMatrixMode(gl.GL_MODELVIEW)

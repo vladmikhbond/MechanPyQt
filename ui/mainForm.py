@@ -92,3 +92,4 @@ class Ui_MainWindow(object):
         self.conditions.setPlainText(_translate("MainWindow", "\'x\':100, \'y\':0, \'vx\':0, \'vy\':1 "))
         self.settings.setToolTip(_translate("MainWindow", "Settings"))
         self.settings.setPlainText(_translate("MainWindow", "\'kz\': 1"))
+
