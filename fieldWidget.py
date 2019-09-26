@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QWidget
-from model.Central import Central
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap
 from PyQt5.QtCore import QPoint, Qt
 

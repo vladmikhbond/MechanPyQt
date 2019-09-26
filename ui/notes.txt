@@ -25,7 +25,6 @@ save and restore data between program calls
 sliders for light position and cam position
 image for the ball
 
-bug: SIDE CELL does not change
 reset dirty changes only
 
 

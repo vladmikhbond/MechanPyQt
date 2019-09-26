@@ -11,12 +11,14 @@ class GLWidget(QOpenGLWidget):
         super().__init__(parent)
         self.model = model
         self.reset(settings)
+        self.cell = self.model.cell
 
     def reset(self, text):
         o = eval('{' + text + '}')
         self.kz = o['kz']
         self.view = o['view']
         self.light = o['light']
+        self.cell = o['cell']
 
     def initializeGL(self):
         MAT_COLOR = [0.3, 0.3, 1]
@@ -67,7 +69,7 @@ class GLWidget(QOpenGLWidget):
 
         w = self.model.width // 2
         h = self.model.height // 2
-        d = self.model.cell
+        d = self.cell
 
         def z(x, y):
             return -(Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz
@@ -111,7 +113,7 @@ class GLWidget(QOpenGLWidget):
 
         w = self.model.width // 2
         h = self.model.height // 2
-        d = self.model.cell
+        d = self.cell
 
         def z(x, y):
             return (Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz

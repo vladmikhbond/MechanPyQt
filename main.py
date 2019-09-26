@@ -13,7 +13,7 @@ T_INTERVAL = 20
 CELL = 6
 
 POTENTIAL = "100 * math.sin(r/ 20)"
-SETTINGS = "'kz': 1, 'view': 0, 'light': 15, 'CELL': 6, 'SIDE': 700"
+SETTINGS = "'kz': 1, 'view': 0, 'light': 15, 'cell': 6"
 
 class Main(QMainWindow):
 
@@ -79,7 +79,6 @@ class Main(QMainWindow):
         text = self.ui.potential.toPlainText()
         self.model.reset(text)
         self.fieldWidget.createFieldImage()
-        self.glWidget.repaint()
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
@@ -87,8 +86,9 @@ class Main(QMainWindow):
 
         # renew settings
         text = self.ui.settings.toPlainText()
-        self.reset(text)
         self.glWidget.reset(text)
+
+
         self.glWidget.repaint()
 
         self.timer.start(T_INTERVAL)
@@ -108,13 +108,6 @@ class Main(QMainWindow):
         b = self.model.balls[0]
         o = b.lagrangian()
         self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = ({o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f})')
-
-    def reset(self, text):
-        o = eval('{' + text + '}')
-        global FIELD_SIDE, CELL
-        FIELD_SIDE = o['SIDE']
-        CELL = o['CELL']
-        self.model
 
 
 if __name__ == '__main__':
