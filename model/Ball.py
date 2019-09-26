@@ -60,8 +60,10 @@ class Ball:
         p_x, p_y = self.m * self._vx, self.m * self._vy
         dpx_dt, dpy_dt = (px - p_x) / 1, (py - p_y) / 1
 
-        dV_dx = (Central.V(self.x, self.y) - Central.V(self._x, self.y)) / (self.x - self._x)
-        dV_dy = (Central.V(self.x, self.y) - Central.V(self.x, self._y)) / (self.y - self._y)
+        dV_dx = 0 if self.x == self._x else (
+            Central.V(self.x, self.y) - Central.V(self._x, self.y)) / (self.x - self._x)
+        dV_dy = 0 if self.y == self._y else (
+            Central.V(self.x, self.y) - Central.V(self.x, self._y)) / (self.y - self._y)
         return [
             dpx_dt, dV_dx,
             dpy_dt, dV_dy ]

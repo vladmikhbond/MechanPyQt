@@ -11,7 +11,9 @@ from glWidget import GLWidget
 FIELD_SIDE = 700
 T_INTERVAL = 20
 CELL = 6
-TEST = "100 *  math.sin(r/ 20)"
+
+POTENTIAL = "100 * math.sin(r/ 20)"
+SETTINGS = "'kz': 1, 'view': 0, 'light': 0, 'CELL': 6, 'SIDE': 700"
 
 class Main(QMainWindow):
 
@@ -25,7 +27,7 @@ class Main(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.glWidget = GLWidget(self, self.model)
+        self.glWidget = GLWidget(self, self.model, SETTINGS)
         self.glWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.glWidget.setObjectName("glWidget")
 
@@ -34,8 +36,8 @@ class Main(QMainWindow):
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
         #
-        self.ui.potential.setPlainText(TEST)
-        self.ui.settings.setPlainText("'kz': 1, 'phi': 0")
+        self.ui.potential.setPlainText(POTENTIAL)
+        self.ui.settings.setPlainText(SETTINGS)
 
         self.show()
 
@@ -78,11 +80,13 @@ class Main(QMainWindow):
         self.model.reset(text)   #todo: danger - div by zero
         self.fieldWidget.createFieldImage()
         self.glWidget.repaint()
+
         # renew a ball
         text = self.ui.conditions.toPlainText()
         self.model.balls[0].reset(text)
         # renew settings
         text = self.ui.settings.toPlainText()
+        self.reset(text)
         self.glWidget.reset(text)
         self.glWidget.repaint()
 
@@ -103,6 +107,12 @@ class Main(QMainWindow):
         b = self.model.balls[0]
         o = b.lagrangian()
         self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = ({o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f})')
+
+    def reset(self, text):
+        o = eval('{' + text + '}')
+        global FIELD_SIDE, CELL
+        FIELD_SIDE = o['SIDE']
+        CELL = o['CELL']
 
 
 if __name__ == '__main__':

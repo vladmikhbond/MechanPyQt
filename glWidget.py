@@ -5,19 +5,21 @@ import OpenGL.GL as gl
 import OpenGL.GLU as glu
 from datetime import datetime
 
+# SETTINGS = "'kz': 1, 'view': 0, 'light': 0, 'CELL': 6, 'SIZE': 700"
+
 
 class GLWidget(QOpenGLWidget):
 
-    def __init__(self, parent, model):
+    def __init__(self, parent, model, settings):
         super().__init__(parent)
         self.model = model
-        self.kz = 1
-        self.phi = 0
+        self.reset(settings)
 
     def reset(self, text):
         o = eval('{' + text + '}')
         self.kz = o['kz']
-        self.phi = o['phi']
+        self.view = o['view']
+        # self.light = o['light']
 
     def initializeGL(self):
         MAT_COLOR = [0.3, 0.3, 1]
@@ -52,15 +54,11 @@ class GLWidget(QOpenGLWidget):
         if not self.model.K:
             return
 
-        LIGHT_POSITION = [-200, 0, 1000, 0]
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, LIGHT_POSITION)
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glPushMatrix()
          # camera
-        camY = math.sin(self.phi * math.pi / 180) * 1000
-        camZ = math.cos(self.phi * math.pi / 180) * 1000
+        camY = math.sin(self.view * math.pi / 180) * 1000
+        camZ = math.cos(self.view * math.pi / 180) * 1000
         glu.gluLookAt(0, camY, camZ, 0,0,0, 0,1,0)
 
         w = self.model.width // 2
