@@ -5,9 +5,6 @@ import OpenGL.GL as gl
 import OpenGL.GLU as glu
 from datetime import datetime
 
-# SETTINGS = "'kz': 1, 'view': 0, 'light': 0, 'CELL': 6, 'SIZE': 700"
-
-
 class GLWidget(QOpenGLWidget):
 
     def __init__(self, parent, model, settings):
@@ -19,12 +16,13 @@ class GLWidget(QOpenGLWidget):
         o = eval('{' + text + '}')
         self.kz = o['kz']
         self.view = o['view']
-        # self.light = o['light']
+        self.light = o['light']
 
     def initializeGL(self):
         MAT_COLOR = [0.3, 0.3, 1]
         DIFFUSE_COLOR = [1, 1, 1, 1.0]
         AMBIENT_COLOR = [0.3, 0.3, 0.3, 1.0]
+
 
         gl.glClearColor(0, 0, 0, 0)
         gl.glShadeModel(gl.GL_SMOOTH)
@@ -35,7 +33,7 @@ class GLWidget(QOpenGLWidget):
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, AMBIENT_COLOR)
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, DIFFUSE_COLOR )
 
-        # light: позиция источника
+
         gl.glEnable(gl.GL_LIGHT0)
 
         # материал
@@ -60,6 +58,12 @@ class GLWidget(QOpenGLWidget):
         camY = math.sin(self.view * math.pi / 180) * 1000
         camZ = math.cos(self.view * math.pi / 180) * 1000
         glu.gluLookAt(0, camY, camZ, 0,0,0, 0,1,0)
+
+        # light position
+        posX = math.sin(self.light * math.pi / 180)
+        posZ = math.cos(self.light * math.pi / 180)
+        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, [posX, 0, posZ, 0])
+
 
         w = self.model.width // 2
         h = self.model.height // 2

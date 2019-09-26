@@ -13,7 +13,7 @@ T_INTERVAL = 20
 CELL = 6
 
 POTENTIAL = "100 * math.sin(r/ 20)"
-SETTINGS = "'kz': 1, 'view': 0, 'light': 0, 'CELL': 6, 'SIDE': 700"
+SETTINGS = "'kz': 1, 'view': 0, 'light': 15, 'CELL': 6, 'SIDE': 700"
 
 class Main(QMainWindow):
 
@@ -77,13 +77,14 @@ class Main(QMainWindow):
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
-        self.model.reset(text)   #todo: danger - div by zero
+        self.model.reset(text)
         self.fieldWidget.createFieldImage()
         self.glWidget.repaint()
 
         # renew a ball
         text = self.ui.conditions.toPlainText()
         self.model.balls[0].reset(text)
+
         # renew settings
         text = self.ui.settings.toPlainText()
         self.reset(text)
@@ -113,6 +114,7 @@ class Main(QMainWindow):
         global FIELD_SIDE, CELL
         FIELD_SIDE = o['SIDE']
         CELL = o['CELL']
+        self.model
 
 
 if __name__ == '__main__':
