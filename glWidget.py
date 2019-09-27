@@ -1,9 +1,9 @@
 import math
+from datetime import datetime
 from model.Central import Central
 from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QOpenGLWidget)
 import OpenGL.GL as gl
 import OpenGL.GLU as glu
-from datetime import datetime
 
 class GLWidget(QOpenGLWidget):
 
@@ -75,8 +75,8 @@ class GLWidget(QOpenGLWidget):
             return -(Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz
 
         gl.glBegin(gl.GL_TRIANGLES)
-        for x in range(-w+d, w, d):
-            for y in range(-h+d, h, d):
+        for x in range(-w, w + d, d):
+            for y in range(-h, h + d, d):
                 v0 = [x, y, z(x, y)]
                 v1 = [x, y - d, z(x, y - d)]
                 v2 = [x + d, y, z(x + d, y)]

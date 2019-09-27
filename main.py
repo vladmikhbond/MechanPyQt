@@ -13,7 +13,7 @@ T_INTERVAL = 20
 CELL = 6
 
 POTENTIAL = "100 * math.sin(r/ 20)"
-SETTINGS = "'kz': 1, 'view': 0, 'light': 15, 'cell': 6"
+SETTINGS = "'kz': 1, 'cell': 6, 'light': 15, 'view': 0"
 
 class Main(QMainWindow):
 
@@ -48,9 +48,11 @@ class Main(QMainWindow):
         # init handlers
         self.setMouseTracking(True)
         self.ui.okButton.clicked.connect(self.okBtnClicked)
+        self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
 
         # first time drawing
         self.okBtnClicked()
+        self.okBallBtnClicked()
 
     # ========================================== Handlers
 
@@ -73,23 +75,29 @@ class Main(QMainWindow):
         y = cur.y() - self.fieldWidget.geometry().y()
         return QPoint(x - x0, y0 - y )
 
-
     def okBtnClicked(self):
         # renew potential
         text = self.ui.potential.toPlainText()
         self.model.reset(text)
         self.fieldWidget.createFieldImage()
 
-        # renew a ball
-        text = self.ui.conditions.toPlainText()
-        self.model.balls[0].reset(text)
-
         # renew settings
         text = self.ui.settings.toPlainText()
         self.glWidget.reset(text)
-
-
         self.glWidget.repaint()
+
+        if self.glWidget.view:
+            self.fieldWidget.setVisible(False)
+            self.timer.stop()
+        else:
+            self.fieldWidget.setVisible(True)
+            self.timer.start(T_INTERVAL)
+
+    def okBallBtnClicked(self):
+        # renew a ball
+        text = self.ui.conditions.toPlainText()
+        self.model.balls[0].reset(text)
+        self.fieldWidget.createFieldImage()
 
         self.timer.start(T_INTERVAL)
 
