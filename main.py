@@ -1,4 +1,5 @@
 import sys
+import os.path
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtCore import QTimer, QRect, QPoint
 from model.Ball import Ball
@@ -12,8 +13,10 @@ FIELD_SIDE = 700
 T_INTERVAL = 20
 CELL = 6
 
-POTENTIAL = "100 * math.sin(r/ 20)"
 SETTINGS = "'kz': 1, 'cell': 6, 'light': 15, 'view': 0"
+POTENTIAL = "100 * math.sin(r/ 20)"
+CONDITIONS = "'x':100, 'y':0, 'vx':0, 'vy':1"
+INI_FILE_PATH = "ini.txt"
 
 class Main(QMainWindow):
 
@@ -21,7 +24,7 @@ class Main(QMainWindow):
         super().__init__()
 
         # init model
-        self.model = Central(FIELD_SIDE, FIELD_SIDE, CELL, Ball())
+        self.model = Central(FIELD_SIDE, CELL, Ball())
 
         # init UI
         self.ui = Ui_MainWindow()
@@ -36,8 +39,10 @@ class Main(QMainWindow):
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
         #
-        self.ui.potential.setPlainText(POTENTIAL)
+        self.loadFromFile()
         self.ui.settings.setPlainText(SETTINGS)
+        self.ui.potential.setPlainText(POTENTIAL)
+        self.ui.conditions.setPlainText(CONDITIONS)
 
         self.show()
 
@@ -53,6 +58,25 @@ class Main(QMainWindow):
         # first time drawing
         self.okBtnClicked()
         self.okBallBtnClicked()
+
+    # ========================================== File
+
+    def loadFromFile(self):
+        global SETTINGS, POTENTIAL, CONDITIONS
+        if os.path.exists(INI_FILE_PATH):
+            with open(INI_FILE_PATH, 'r') as f:
+                lines = f.readlines()
+        if len(lines) >= 3:
+            if lines[0]: SETTINGS = lines[0].strip()
+            if lines[1]: POTENTIAL = lines[1].strip()
+            if lines[2]: CONDITIONS = lines[2].strip()
+
+    def saveToFile(self):
+        global SETTINGS, POTENTIAL, CONDITIONS
+        with open(INI_FILE_PATH, 'w') as f:
+            f.write(SETTINGS + '\n')
+            f.write(POTENTIAL + '\n')
+            f.write(CONDITIONS + '\n')
 
     # ========================================== Handlers
 
@@ -76,14 +100,15 @@ class Main(QMainWindow):
         return QPoint(x - x0, y0 - y )
 
     def okBtnClicked(self):
+        global SETTINGS, POTENTIAL
         # renew potential
-        text = self.ui.potential.toPlainText()
-        self.model.reset(text)
+        POTENTIAL  = self.ui.potential.toPlainText()
+        self.model.reset(POTENTIAL )
         self.fieldWidget.createFieldImage()
 
         # renew settings
-        text = self.ui.settings.toPlainText()
-        self.glWidget.reset(text)
+        SETTINGS = self.ui.settings.toPlainText()
+        self.glWidget.reset(SETTINGS)
         self.glWidget.repaint()
 
         if self.glWidget.view:
@@ -93,13 +118,17 @@ class Main(QMainWindow):
             self.fieldWidget.setVisible(True)
             self.timer.start(T_INTERVAL)
 
+        self.saveToFile()
+
     def okBallBtnClicked(self):
+        global CONDITIONS
         # renew a ball
-        text = self.ui.conditions.toPlainText()
-        self.model.balls[0].reset(text)
+        CONDITIONS = self.ui.conditions.toPlainText()
+        self.model.balls[0].reset(CONDITIONS)
         self.fieldWidget.createFieldImage()
 
         self.timer.start(T_INTERVAL)
+        self.saveToFile()
 
     def step(self):
         # stop timer when a ball is far away

@@ -17,9 +17,9 @@ class Central:
 
     V = lambda x, y: 0
 
-    def __init__(self, width, height, cell, *balls):
-        self.width = width
-        self.height = height
+    def __init__(self, side, cell, *balls):
+        self.width = side
+        self.height = side
         self.balls = []
         self.cell = cell
         for b in balls:

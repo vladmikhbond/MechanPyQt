@@ -21,7 +21,7 @@ math.log(r)
 
 
 TODO
-save and restore data between program calls
+
 sliders for light position and cam position
 
 
