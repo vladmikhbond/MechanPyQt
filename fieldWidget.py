@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap
+from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap, QImage
 from PyQt5.QtCore import QPoint, Qt
 
 TRACK_COLOR = QColor('red')
@@ -13,6 +13,8 @@ class FieldWidget(QWidget):
         super().__init__(parent)
         self.model = model
         self.fieldImage = None
+        self.ballImage = QImage()
+        self.ballImage.load('ball.png')
 
     def paintEvent(self, event):
         qp = QPainter()
@@ -24,10 +26,10 @@ class FieldWidget(QWidget):
         qp.translate(self.model.width / 2, self.model.height / 2)
         qp.scale(1, -1)
         qp.setPen(BALL_COLOR)
-        qp.setBrush(BALL_COLOR)
-        r = 10
+        r = 11
         for b in self.model.balls:
-            qp.drawEllipse(QPoint(b.x, b.y), r, r)
+            qp.drawImage(QPoint(b.x-r, b.y-r), self.ballImage)
+
         qp.end()
 
         # tracks to image
