@@ -43,6 +43,10 @@ class GLWidget(QOpenGLWidget):
         gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.9, 0.9, 0.9, 1.0])
         gl.glColor3fv(MAT_COLOR)
 
+    def z(self, x, y):
+        return Central.V(x, y) * self.kz
+
+
     #   v0 ---- v2
     #   |     / |
     #   |   /   |
@@ -53,6 +57,8 @@ class GLWidget(QOpenGLWidget):
 
         if not self.model.K:
             return
+
+
 
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glPushMatrix()
@@ -71,16 +77,14 @@ class GLWidget(QOpenGLWidget):
         h = self.model.height // 2
         d = self.cell
 
-        def z(x, y):
-            return -(Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz
 
         gl.glBegin(gl.GL_TRIANGLES)
         for x in range(-w, w + d, d):
             for y in range(-h, h + d, d):
-                v0 = [x, y, z(x, y)]
-                v1 = [x, y - d, z(x, y - d)]
-                v2 = [x + d, y, z(x + d, y)]
-                v3 = [x + d, y - d, z(x + d, y - d)]
+                v0 = [x, y, self.z(x, y)]
+                v1 = [x, y - d, self.z(x, y - d)]
+                v2 = [x + d, y, self.z(x + d, y)]
+                v3 = [x + d, y - d, self.z(x + d, y - d)]
                 n012 = normcrossprod(v0, v1, v2)
                 n132 = normcrossprod(v1, v3, v2)
                 # v0v1v2
@@ -96,58 +100,8 @@ class GLWidget(QOpenGLWidget):
 
         gl.glEnd()
         gl.glPopMatrix()
-
         print(f"paintGL: {datetime.now().timestamp() - stamp}")  #######
 
-    def paintGL_strip(self):
-        stamp = datetime.now().timestamp()  #######
-        if not self.model.K:
-            return
-
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
-
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPushMatrix()
-         # camera
-        glu.gluLookAt(0,0,1000, 0,0,0, 0,1,0)
-
-        w = self.model.width // 2
-        h = self.model.height // 2
-        d = self.cell
-
-        def z(x, y):
-            return (Central.V(x, y) - self.model.Vmin) * self.model.K * self.kz
-
-        for y in range(-h, h + d, d):
-            x = -w
-            v0 = [x, y, z(x, y)]
-            v1 = [x, y - d, z(x, y - d)]
-            v2 = [x + d, y, z(x + d, y)]
-            gl.glBegin(gl.GL_TRIANGLE_STRIP)
-
-            n = normcrossprod(v0, v1, v2)
-            gl.glNormal3fv(n)
-            gl.glVertex3fv(v0)
-            gl.glVertex3fv(v1)
-
-            for x in range(-w + d, w + d, d):
-                v2 = [x, y, z(x, y)]
-                v3 = [x, y - d, z(x - d, y)]
-                n2 = normcrossprod(v0, v1, v2)
-                n3 = normcrossprod(v1, v3, v2)
-
-                gl.glNormal3fv(n2)
-                gl.glVertex3fv(v2)
-
-                gl.glNormal3fv(n3)
-                gl.glVertex3fv(v3)
-
-                v0, v1 = v2, v3
-            gl.glEnd()
-
-        gl.glPopMatrix()
-
-        print(f"paintGL: {datetime.now().timestamp() - stamp}")  #######
 
     def resizeGL(self, width, height):
         side = min(width, height) / 2

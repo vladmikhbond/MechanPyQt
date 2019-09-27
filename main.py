@@ -84,8 +84,8 @@ class Main(QMainWindow):
         # diagnostic print
         p = self.ScreenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
-        n = (v - self.model.Vmin) * self.model.K * self.glWidget.kz
-        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} z={n:0.4f}')
+        z = self.glWidget.z(p.x(), p.y())
+        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} z={z:0.4f}')
 
         # toggle timer
         if self.timer.isActive():
