@@ -2,7 +2,7 @@ import math
 from datetime import datetime
 from model.Central import Central
 from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QOpenGLWidget)
-import OpenGL.GL as gl
+from OpenGL.GL import *
 import OpenGL.GLU as glu
 
 class GLWidget(QOpenGLWidget):
@@ -24,27 +24,32 @@ class GLWidget(QOpenGLWidget):
         MAT_COLOR = [0.3, 0.3, 1]
         DIFFUSE_COLOR = [1, 1, 1, 1.0]
         AMBIENT_COLOR = [0.3, 0.3, 0.3, 1.0]
+        SPECULAR_COLOR = [1, 1, 1, 1.0]
+        SPECULAR_MATERIAL = [0.2, 0.2, 0.2, 1.0]
 
+        glEnable(GL_DEPTH_TEST)
 
-        gl.glClearColor(0, 0, 0, 0)
-        gl.glShadeModel(gl.GL_SMOOTH)
-        gl.glEnable(gl.GL_COLOR_MATERIAL)
-        gl.glEnable(gl.GL_LIGHTING)
+        glClearColor(0, 0, 0, 0)
+        glShadeModel(GL_FLAT)
+        glEnable(GL_COLOR_MATERIAL)
+        glEnable(GL_LIGHTING)
 
         # light: цвета источника
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_AMBIENT, AMBIENT_COLOR)
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_DIFFUSE, DIFFUSE_COLOR )
-
-
-        gl.glEnable(gl.GL_LIGHT0)
+        glLightfv(GL_LIGHT0, GL_AMBIENT, AMBIENT_COLOR)
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, DIFFUSE_COLOR )
+        glLightfv(GL_LIGHT0, GL_SPECULAR, SPECULAR_COLOR )
+        glEnable(GL_LIGHT0)
 
         # материал
-        gl.glColorMaterial(gl.GL_FRONT_AND_BACK, gl.GL_AMBIENT_AND_DIFFUSE)
-        gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE, [0.9, 0.9, 0.9, 1.0])
-        gl.glColor3fv(MAT_COLOR)
+        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
+        glColor3fv(MAT_COLOR)
+        # glMaterialfv(GL_FRONT, GL_SPECULAR, SPECULAR_MATERIAL)
+        # glMateriali(GL_FRONT, GL_SHININESS, 64)
 
-    def z(self, x, y):
-        return Central.V(x, y) * self.kz
+        # glEnable(GL_CULL_FACE)
+        # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+
+
 
 
     #   v0 ---- v2
@@ -55,30 +60,31 @@ class GLWidget(QOpenGLWidget):
     def paintGL(self):
         stamp = datetime.now().timestamp()  #######
 
-        if not self.model.K:
+        if Central.V(0, 0) is None:
             return
 
+        # save current model view matrix
+        glMatrixMode(GL_MODELVIEW)
+        glPushMatrix()
 
-
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPushMatrix()
-         # camera
+        # set camera position
         camY = math.sin(self.view * math.pi / 180) * 1000
         camZ = math.cos(self.view * math.pi / 180) * 1000
-        glu.gluLookAt(0, camY, camZ, 0,0,0, 0,1,0)
+        glu.gluLookAt(0, camY, camZ,   0, 0, 0,    0, 1, 0)
 
         # light position
         posX = math.sin(self.light * math.pi / 180)
         posZ = math.cos(self.light * math.pi / 180)
-        gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, [posX, 0, posZ, 0])
+        glLightfv(GL_LIGHT0, GL_POSITION, [posX, 0, posZ, 0])
 
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # glFrontFace(GL_CCW)
 
         w = self.model.width // 2
         h = self.model.height // 2
         d = self.cell
 
-
-        gl.glBegin(gl.GL_TRIANGLES)
+        glBegin(GL_TRIANGLES)
         for x in range(-w, w + d, d):
             for y in range(-h, h + d, d):
                 v0 = [x, y, self.z(x, y)]
@@ -88,18 +94,18 @@ class GLWidget(QOpenGLWidget):
                 n012 = normcrossprod(v0, v1, v2)
                 n132 = normcrossprod(v1, v3, v2)
                 # v0v1v2
-                gl.glNormal3fv(n012)
-                gl.glVertex3fv(v0)
-                gl.glVertex3fv(v1)
-                gl.glVertex3fv(v2)
+                glNormal3fv(n012)
+                glVertex3fv(v0)
+                glVertex3fv(v1)
+                glVertex3fv(v2)
                 # v1v2v3
-                gl.glNormal3fv(n132)
-                gl.glVertex3fv(v1)
-                gl.glVertex3fv(v3)
-                gl.glVertex3fv(v2)
+                glNormal3fv(n132)
+                glVertex3fv(v1)
+                glVertex3fv(v3)
+                glVertex3fv(v2)
 
-        gl.glEnd()
-        gl.glPopMatrix()
+        glEnd()
+        glPopMatrix()
         print(f"paintGL: {datetime.now().timestamp() - stamp}")  #######
 
 
@@ -107,20 +113,24 @@ class GLWidget(QOpenGLWidget):
         side = min(width, height) / 2
         if side < 0:
             return
-        gl.glViewport(0, 0, width, height)
-        # текущая матрица - проекций
-        gl.glMatrixMode(gl.GL_PROJECTION)
-        # загрузка 1-матрицы
-        gl.glLoadIdentity()
+        # окно просмотра - ни на что не влияет ???
+        # gl.glViewport(0, 0, width, height)
 
-        gl.glOrtho(-side, side, -side, side, -1000, 2000)
-        #glu.gluPerspective(45.0, width / height, 0, 1000 )
+        # загрузка 1-матрицы проекций
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
 
-        # текущая матрица - наблюдения модели
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        # загрузка 1-матрицы
-        gl.glLoadIdentity()
+        # режим ортогональной поекции
+        z_from, z_to = -1000, 2000
+        glOrtho(-side, side, -side, side, z_from, z_to)
+        # glu.gluPerspective(45.0, width / height, 0, 1000 )
 
+        # загрузка 1-матрицы наблюдения модели
+        # gl.glMatrixMode(gl.GL_MODELVIEW)
+        # gl.glLoadIdentity()
+
+    def z(self, x, y):
+        return Central.V(x, y) * self.kz
 
 def normcrossprod(v0, v1, v2):
     ax = v1[0] - v0[0]

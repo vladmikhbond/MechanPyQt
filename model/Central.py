@@ -1,21 +1,19 @@
 # import math is needed for V evaluation
 import math
-from datetime import datetime
 
-DELTA = 0.001
-from PyQt5.QtCore import QPoint
+_delta = 0.001
 
 def dV_dx(x, y):
-    return (Central.V(x + DELTA, y) - Central.V(x - DELTA, y)) / (2 * DELTA)
+    return (Central.V(x + _delta, y) - Central.V(x - _delta, y)) / (2 * _delta)
 
 
 def dV_dy(x, y):
-    return (Central.V(x, y + DELTA) - Central.V(x, y - DELTA)) / (2 * DELTA)
+    return (Central.V(x, y + _delta) - Central.V(x, y - _delta)) / (2 * _delta)
 
 
 class Central:
 
-    V = lambda x, y: 0
+    V = lambda x, y: None
 
     def __init__(self, side, cell, *balls):
         self.width = side
@@ -24,8 +22,6 @@ class Central:
         self.cell = cell
         for b in balls:
             self.addBall(b)
-        self.K = 0
-        self.Vmin = 0
 
     def step(self):
         for b in self.balls:
@@ -40,28 +36,3 @@ class Central:
     def reset(self, text):
         text = text.replace("r", "((x*x + y*y)**0.5)")
         Central.V = eval("lambda x, y: " + text)
-        self.K, self.Vmin = self._calcK();
-
-    # normalize: from 0 to 100
-    #
-    def _calcK(self):
-        stamp = datetime.now().timestamp()  #######
-
-        w = self.width // 2
-        h = self.height // 2
-        d = self.cell
-
-        v_min = v_max = Central.V(-w, -h)
-        for x in range(-w, w + d, d):
-            for y in range(-h, h + d, d):
-                v = Central.V(x, y)
-                if v_min > v:
-                    v_min = v
-                if v_max < v:
-                    v_max = v
-
-        print(f"calcK: {datetime.now().timestamp() - stamp}")  #######
-
-        if v_max == v_min:
-            return 0, 0
-        return 100 / (v_max - v_min), v_min

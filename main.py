@@ -56,10 +56,13 @@ class Main(QMainWindow):
         self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
 
         # first time drawing
-        self.okBtnClicked()
-        self.okBallBtnClicked()
+        self.resetConditions()
+        self.resetSettings()
+        self.timerStart()
 
-    # ========================================== File
+
+
+    # ========================================== Settings
 
     def loadFromFile(self):
         global SETTINGS, POTENTIAL, CONDITIONS
@@ -78,6 +81,31 @@ class Main(QMainWindow):
             f.write(POTENTIAL + '\n')
             f.write(CONDITIONS + '\n')
 
+    def resetConditions(self):
+        global CONDITIONS
+        # renew a ball
+        CONDITIONS = self.ui.conditions.toPlainText()
+        self.model.balls[0].reset(CONDITIONS)
+        self.fieldWidget.createFieldImage()
+
+    def resetSettings(self):
+        global SETTINGS, POTENTIAL
+        # renew settings
+        SETTINGS = self.ui.settings.toPlainText()
+        self.glWidget.reset(SETTINGS)
+        # renew potential
+        POTENTIAL  = self.ui.potential.toPlainText()
+        self.model.reset(POTENTIAL )
+        self.fieldWidget.createFieldImage()
+
+    def timerStart(self):
+        if self.glWidget.view:
+            self.fieldWidget.setVisible(False)
+            self.timer.stop()
+        else:
+            self.fieldWidget.setVisible(True)
+            self.timer.start(T_INTERVAL)
+
     # ========================================== Handlers
 
     def mousePressEvent(self, event):
@@ -85,13 +113,13 @@ class Main(QMainWindow):
         p = self.ScreenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
         z = self.glWidget.z(p.x(), p.y())
-        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f} z={z:0.4f}')
+        print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f}  z={z:0.4f}')
 
         # toggle timer
         if self.timer.isActive():
             self.timer.stop()
         else:
-            self.timer.start(T_INTERVAL)
+            self.timerStart()
 
     def ScreenToWorld(self, cur: QPoint):
         x0, y0 = self.model.width / 2, self.model.height / 2
@@ -100,34 +128,15 @@ class Main(QMainWindow):
         return QPoint(x - x0, y0 - y )
 
     def okBtnClicked(self):
-        global SETTINGS, POTENTIAL
-        # renew potential
-        POTENTIAL  = self.ui.potential.toPlainText()
-        self.model.reset(POTENTIAL )
-        self.fieldWidget.createFieldImage()
+        self.resetSettings()
+        self.timerStart()
 
-        # renew settings
-        SETTINGS = self.ui.settings.toPlainText()
-        self.glWidget.reset(SETTINGS)
         self.glWidget.repaint()
-
-        if self.glWidget.view:
-            self.fieldWidget.setVisible(False)
-            self.timer.stop()
-        else:
-            self.fieldWidget.setVisible(True)
-            self.timer.start(T_INTERVAL)
-
         self.saveToFile()
 
     def okBallBtnClicked(self):
-        global CONDITIONS
-        # renew a ball
-        CONDITIONS = self.ui.conditions.toPlainText()
-        self.model.balls[0].reset(CONDITIONS)
-        self.fieldWidget.createFieldImage()
-
-        self.timer.start(T_INTERVAL)
+        self.resetConditions()
+        self.timerStart()
         self.saveToFile()
 
     def step(self):
