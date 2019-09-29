@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>910</height>
+    <width>721</width>
+    <height>905</height>
    </rect>
   </property>
   <property name="font">
@@ -183,14 +183,41 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPlainTextEdit" name="comment">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>860</y>
+      <width>701</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="plainText">
+     <string>0.00005 * r**2    - резиновая нить, есть круговые орбиты, их частота одинакова
+0.01 * r         - сила не зависит от расстояния, есть круговые орбиты
+-100 / r       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)
+-5000 / r**2 - сила обратно пропорц. кубу расстояния - неуст.орбиты
+
+100 *  math.sin(r/ 20) 
+
+10 *  math.sin((x - y)/ 50) - (Нецентральные) полет по синусоиде
+math.log(r)
+</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>720</width>
-     <height>18</height>
+     <width>721</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(720, 910)
+        MainWindow.resize(721, 905)
         font = QtGui.QFont()
         font.setPointSize(15)
         MainWindow.setFont(font)
@@ -76,9 +76,15 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 698, 698))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.comment = QtWidgets.QPlainTextEdit(self.centralwidget)
+        self.comment.setGeometry(QtCore.QRect(10, 860, 701, 91))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.comment.setFont(font)
+        self.comment.setObjectName("comment")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 720, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 721, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -99,3 +105,13 @@ class Ui_MainWindow(object):
         self.settings.setToolTip(_translate("MainWindow", "Settings"))
         self.settings.setPlainText(_translate("MainWindow", "\'kz\': 1"))
         self.okBallButton.setText(_translate("MainWindow", "Ok"))
+        self.comment.setPlainText(_translate("MainWindow", "0.00005 * r**2    - резиновая нить, есть круговые орбиты, их частота одинакова\n"
+"0.01 * r         - сила не зависит от расстояния, есть круговые орбиты\n"
+"-100 / r       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)\n"
+"-5000 / r**2 - сила обратно пропорц. кубу расстояния - неуст.орбиты\n"
+"\n"
+"100 *  math.sin(r/ 20) \n"
+"\n"
+"10 *  math.sin((x - y)/ 50) - (Нецентральные) полет по синусоиде\n"
+"math.log(r)\n"
+""))

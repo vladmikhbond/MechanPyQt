@@ -23,8 +23,8 @@ class GLWidget(QOpenGLWidget):
     def initializeGL(self):
         MAT_COLOR = [0.3, 0.3, 1]
         DIFFUSE_COLOR = [1, 1, 1, 1.0]
-        AMBIENT_COLOR = [0.3, 0.3, 0.3, 1.0]
-        SPECULAR_COLOR = [1, 1, 1, 1.0]
+        AMBIENT_COLOR = [0.5, 0.5, 0.5, 1.0]
+        SPECULAR_COLOR = [0.3, 0.3, 0.3, 1.0]
         SPECULAR_MATERIAL = [0.2, 0.2, 0.2, 1.0]
 
         glEnable(GL_DEPTH_TEST)
@@ -37,17 +37,18 @@ class GLWidget(QOpenGLWidget):
         # light: цвета источника
         glLightfv(GL_LIGHT0, GL_AMBIENT, AMBIENT_COLOR)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, DIFFUSE_COLOR )
-        glLightfv(GL_LIGHT0, GL_SPECULAR, SPECULAR_COLOR )
+        # glLightfv(GL_LIGHT0, GL_SPECULAR, SPECULAR_COLOR )
         glEnable(GL_LIGHT0)
 
         # материал
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
         glColor3fv(MAT_COLOR)
+        # отражательная способность (только ухудшает вид)
         # glMaterialfv(GL_FRONT, GL_SPECULAR, SPECULAR_MATERIAL)
-        # glMateriali(GL_FRONT, GL_SHININESS, 64)
+        # glMateriali(GL_FRONT, GL_SHININESS, 32)
 
-        # glEnable(GL_CULL_FACE)
-        # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        glEnable(GL_CULL_FACE)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
 
 
@@ -77,34 +78,36 @@ class GLWidget(QOpenGLWidget):
         posZ = math.cos(self.light * math.pi / 180)
         glLightfv(GL_LIGHT0, GL_POSITION, [posX, 0, posZ, 0])
 
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # glFrontFace(GL_CCW)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         w = self.model.width // 2
         h = self.model.height // 2
         d = self.cell
 
-        glBegin(GL_TRIANGLES)
         for x in range(-w, w + d, d):
+            glBegin(GL_TRIANGLE_STRIP)
+            y = -h
+            v0 = [x, y, self.z(x, y)]
+            v1 = [x + d, y, self.z(x + d, y)]
+            v2 = [x, y + d, self.z(x, y + d)]
+            n1 = normcrossprod(v0, v1, v2)
+            glNormal3fv(n1)
+            glVertex3fv(v0)
+            glVertex3fv(v1)
+
             for y in range(-h, h + d, d):
-                v0 = [x, y, self.z(x, y)]
-                v1 = [x, y - d, self.z(x, y - d)]
-                v2 = [x + d, y, self.z(x + d, y)]
-                v3 = [x + d, y - d, self.z(x + d, y - d)]
-                n012 = normcrossprod(v0, v1, v2)
-                n132 = normcrossprod(v1, v3, v2)
-                # v0v1v2
-                glNormal3fv(n012)
-                glVertex3fv(v0)
-                glVertex3fv(v1)
-                glVertex3fv(v2)
-                # v1v2v3
-                glNormal3fv(n132)
-                glVertex3fv(v1)
-                glVertex3fv(v3)
+                v2 = [x, y + d, self.z(x, y + d)]
+                v3 = [x + d, y + d, self.z(x + d, y + d)]
+                n1 = normcrossprod(v2, v0, v1)
+                n2 = normcrossprod(v3, v2, v1)
+                glNormal3fv(n1)
                 glVertex3fv(v2)
 
-        glEnd()
+                glNormal3fv(n2)
+                glVertex3fv(v3)
+                v0, v1 = v2, v3
+            glEnd()
+
         glPopMatrix()
         print(f"paintGL: {datetime.now().timestamp() - stamp}")  #######
 
@@ -114,7 +117,7 @@ class GLWidget(QOpenGLWidget):
         if side < 0:
             return
         # окно просмотра - ни на что не влияет ???
-        # gl.glViewport(0, 0, width, height)
+        glViewport(0, 0, width, height)
 
         # загрузка 1-матрицы проекций
         glMatrixMode(GL_PROJECTION)
@@ -123,11 +126,10 @@ class GLWidget(QOpenGLWidget):
         # режим ортогональной поекции
         z_from, z_to = -1000, 2000
         glOrtho(-side, side, -side, side, z_from, z_to)
-        # glu.gluPerspective(45.0, width / height, 0, 1000 )
 
         # загрузка 1-матрицы наблюдения модели
-        # gl.glMatrixMode(gl.GL_MODELVIEW)
-        # gl.glLoadIdentity()
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
 
     def z(self, x, y):
         return Central.V(x, y) * self.kz
