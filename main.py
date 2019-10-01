@@ -121,7 +121,7 @@ class Main(QMainWindow):
 
     def mousePressEvent(self, event):
         # diagnostic print
-        p = self.ScreenToWorld(event.pos())
+        p = self.screenToWorld(event.pos())
         v = Central.V(p.x(), p.y())
         z = self.glWidget.z(p.x(), p.y())
         print(f'x={p.x():4}  y={p.y():4}  v={v:0.4f}  z={z:0.4f}')
@@ -132,7 +132,7 @@ class Main(QMainWindow):
         else:
             self.timerStart()
 
-    def ScreenToWorld(self, cur: QPoint):
+    def screenToWorld(self, cur: QPoint):
         x0, y0 = self.model.width / 2, self.model.height / 2
         x = cur.x() - self.fieldWidget.geometry().x()
         y = cur.y() - self.fieldWidget.geometry().y()

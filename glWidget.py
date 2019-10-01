@@ -27,6 +27,7 @@ class GLWidget(QOpenGLWidget):
         DIFFUSE_COLOR1 = [1, 0.3, 0.3, 1.0]
         AMBIENT_COLOR1 = [0.1, 0, 0, 1.0]
 
+        # тест глубины не справляется, строим поверхность от дальних вершин к ближним
         glEnable(GL_DEPTH_TEST)
 
         glClearColor(0, 0, 0, 0)
@@ -50,9 +51,6 @@ class GLWidget(QOpenGLWidget):
         glColor3fv(MAT_COLOR)
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
-
-
 
     #   v0 ---- v2
     #   |     / |
@@ -86,7 +84,8 @@ class GLWidget(QOpenGLWidget):
         h = self.model.height // 2
         d = self.cell
 
-        for x in range(-w, w + d, d):
+        # строим поверхность от дальних вершин к ближним
+        for x in range(w, -w - d, -d):
             glBegin(GL_TRIANGLE_STRIP)
             y = -h
             v0 = [x, y, self.z(x, y)]
@@ -126,7 +125,7 @@ class GLWidget(QOpenGLWidget):
         glLoadIdentity()
 
         # режим ортогональной поекции
-        z_from, z_to = -1000, 2000
+        z_from, z_to = -2000, 3000
         glOrtho(-side, side, -side, side, z_from, z_to)
 
         # загрузка 1-матрицы наблюдения модели

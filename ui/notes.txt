@@ -16,9 +16,9 @@ math.log(r)
 
 
 TODO
-red light for opposite direction
-sliders for light position and cam position
 
+sliders for light position and cam position
+индикатор силы в виде стрелки
 
 
 
