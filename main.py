@@ -54,6 +54,8 @@ class Main(QMainWindow):
         self.setMouseTracking(True)
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
+        self.ui.viewSlider.valueChanged.connect(self.value_changed)
+        # self.ui.lightSlider.valueChanged.connect(self.value_changed)
 
         # first time drawing
         self.resetConditions()
@@ -107,6 +109,15 @@ class Main(QMainWindow):
             self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
+    def value_changed(self):
+        val = self.ui.viewSlider.value()
+        self.glWidget.view = val
+        # todo: change text
+        text = self.ui.settings.toPlainText()
+        idx = text.find("'view':")
+        self.ui.settings.setPlainText(text[:idx+7] + str(val))
+        self.okBtnClicked()
+
 
     def mousePressEvent(self, event):
         # diagnostic print
