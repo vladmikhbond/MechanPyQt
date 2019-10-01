@@ -69,10 +69,10 @@ class Main(QMainWindow):
         if os.path.exists(INI_FILE_PATH):
             with open(INI_FILE_PATH, 'r') as f:
                 lines = f.readlines()
-        if len(lines) >= 3:
-            if lines[0]: SETTINGS = lines[0].strip()
-            if lines[1]: POTENTIAL = lines[1].strip()
-            if lines[2]: CONDITIONS = lines[2].strip()
+            if len(lines) >= 3:
+                if lines[0]: SETTINGS = lines[0].strip()
+                if lines[1]: POTENTIAL = lines[1].strip()
+                if lines[2]: CONDITIONS = lines[2].strip()
 
     def saveToFile(self):
         global SETTINGS, POTENTIAL, CONDITIONS

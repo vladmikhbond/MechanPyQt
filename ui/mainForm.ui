@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
-    <height>905</height>
+    <width>722</width>
+    <height>878</height>
    </rect>
   </property>
   <property name="font">
@@ -186,10 +186,10 @@
    <widget class="QPlainTextEdit" name="comment">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>860</y>
-      <width>701</width>
-      <height>91</height>
+      <x>730</x>
+      <y>150</y>
+      <width>591</width>
+      <height>691</height>
      </rect>
     </property>
     <property name="font">
@@ -216,8 +216,8 @@ math.log(r)
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>721</width>
-     <height>21</height>
+     <width>722</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>

@@ -21,11 +21,11 @@ class GLWidget(QOpenGLWidget):
         self.cell = o['cell']
 
     def initializeGL(self):
-        MAT_COLOR = [0.3, 0.3, 1]
-        DIFFUSE_COLOR = [1, 1, 1, 1.0]
-        AMBIENT_COLOR = [0.5, 0.5, 0.5, 1.0]
-        SPECULAR_COLOR = [0.3, 0.3, 0.3, 1.0]
-        SPECULAR_MATERIAL = [0.2, 0.2, 0.2, 1.0]
+        MAT_COLOR = [1, 1, 1]
+        DIFFUSE_COLOR = [0.3, 0.3, 1, 1.0]
+        AMBIENT_COLOR = [0, 0, 0.1, 1.0]
+        DIFFUSE_COLOR1 = [1, 0.3, 0.3, 1.0]
+        AMBIENT_COLOR1 = [0.1, 0, 0, 1.0]
 
         glEnable(GL_DEPTH_TEST)
 
@@ -37,17 +37,18 @@ class GLWidget(QOpenGLWidget):
         # light: цвета источника
         glLightfv(GL_LIGHT0, GL_AMBIENT, AMBIENT_COLOR)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, DIFFUSE_COLOR )
-        # glLightfv(GL_LIGHT0, GL_SPECULAR, SPECULAR_COLOR )
         glEnable(GL_LIGHT0)
 
-        # материал
-        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-        glColor3fv(MAT_COLOR)
-        # отражательная способность (только ухудшает вид)
-        # glMaterialfv(GL_FRONT, GL_SPECULAR, SPECULAR_MATERIAL)
-        # glMateriali(GL_FRONT, GL_SHININESS, 32)
+        glLightfv(GL_LIGHT1, GL_AMBIENT, AMBIENT_COLOR1)
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, DIFFUSE_COLOR1)
+        glEnable(GL_LIGHT1)
 
-        glEnable(GL_CULL_FACE)
+        glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1)
+
+        # материал
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        glColor3fv(MAT_COLOR)
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
 
@@ -77,6 +78,7 @@ class GLWidget(QOpenGLWidget):
         posX = math.sin(self.light * math.pi / 180)
         posZ = math.cos(self.light * math.pi / 180)
         glLightfv(GL_LIGHT0, GL_POSITION, [posX, 0, posZ, 0])
+        glLightfv(GL_LIGHT1, GL_POSITION, [-posX, 0, -posZ, 0])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
