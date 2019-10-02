@@ -54,8 +54,8 @@ class Main(QMainWindow):
         self.setMouseTracking(True)
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
-        self.ui.viewSlider.valueChanged.connect(self.value_changed)
-        # self.ui.lightSlider.valueChanged.connect(self.value_changed)
+        self.ui.viewSlider.valueChanged.connect(self.viewSlider_changed)
+        self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
 
         # first time drawing
         self.resetConditions()
@@ -99,6 +99,11 @@ class Main(QMainWindow):
         POTENTIAL  = self.ui.potential.toPlainText()
         self.model.reset(POTENTIAL )
         self.fieldWidget.createFieldImage()
+        # correct slider positions
+        self.ui.viewSlider.setValue(self.glWidget.view)
+        self.ui.lightSlider.setValue(self.glWidget.light)
+
+
 
     def timerStart(self):
         if self.glWidget.view:
@@ -109,15 +114,24 @@ class Main(QMainWindow):
             self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
-    def value_changed(self):
+    def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
         self.glWidget.view = val
-        # todo: change text
-        text = self.ui.settings.toPlainText()
-        idx = text.find("'view':")
-        self.ui.settings.setPlainText(text[:idx+7] + str(val))
-        self.okBtnClicked()
+        self._changeSettingsText(val, "'view':", " ")
 
+    def lightSlider_changed(self):
+        val = self.ui.lightSlider.value()
+        self.glWidget.light = val
+        self._changeSettingsText(val, "'light':", ",")
+
+    def _changeSettingsText(self, val, key1, key2):
+        text = self.ui.settings.toPlainText()
+        idx1 = text.find(key1) + len(key1)
+        idx2 = text.find(key2, idx1)
+        if idx2 == -1:
+            idx2 = len(text)
+        self.ui.settings.setPlainText(text[:idx1] + str(val) + text[idx2:])
+        self.okBtnClicked()
 
     def mousePressEvent(self, event):
         # diagnostic print
@@ -140,15 +154,14 @@ class Main(QMainWindow):
 
     def okBtnClicked(self):
         self.resetSettings()
-        self.timerStart()
-
-        self.glWidget.repaint()
         self.saveToFile()
+        self.timerStart()
+        self.glWidget.repaint()
 
     def okBallBtnClicked(self):
         self.resetConditions()
-        self.timerStart()
         self.saveToFile()
+        self.timerStart()
 
     def step(self):
         # stop timer when a ball is far away

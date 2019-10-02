@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
+    <width>720</width>
     <height>878</height>
    </rect>
   </property>
@@ -44,7 +44,7 @@
       <rect>
        <x>10</x>
        <y>50</y>
-       <width>501</width>
+       <width>561</width>
        <height>31</height>
       </rect>
      </property>
@@ -68,10 +68,10 @@
     <widget class="QPushButton" name="okButton">
      <property name="geometry">
       <rect>
-       <x>520</x>
-       <y>10</y>
+       <x>580</x>
+       <y>40</y>
        <width>71</width>
-       <height>71</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -88,7 +88,7 @@
       <rect>
        <x>10</x>
        <y>90</y>
-       <width>501</width>
+       <width>561</width>
        <height>31</height>
       </rect>
      </property>
@@ -117,7 +117,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>501</width>
+       <width>481</width>
        <height>31</height>
       </rect>
      </property>
@@ -141,7 +141,7 @@
     <widget class="QPushButton" name="okBallButton">
      <property name="geometry">
       <rect>
-       <x>520</x>
+       <x>580</x>
        <y>90</y>
        <width>71</width>
        <height>31</height>
@@ -156,12 +156,43 @@
       <string>Ok</string>
      </property>
     </widget>
+    <widget class="QSlider" name="lightSlider">
+     <property name="geometry">
+      <rect>
+       <x>510</x>
+       <y>10</y>
+       <width>141</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Light</string>
+     </property>
+     <property name="minimum">
+      <number>-90</number>
+     </property>
+     <property name="maximum">
+      <number>90</number>
+     </property>
+     <property name="pageStep">
+      <number>15</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::TicksBelow</enum>
+     </property>
+     <property name="tickInterval">
+      <number>15</number>
+     </property>
+    </widget>
     <widget class="QSlider" name="viewSlider">
      <property name="geometry">
       <rect>
-       <x>640</x>
+       <x>670</x>
        <y>10</y>
-       <width>16</width>
+       <width>31</width>
        <height>111</height>
       </rect>
      </property>
@@ -174,33 +205,8 @@
      <property name="maximum">
       <number>90</number>
      </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::TicksAbove</enum>
-     </property>
-     <property name="tickInterval">
-      <number>10</number>
-     </property>
-    </widget>
-    <widget class="QSlider" name="lightSlider">
-     <property name="geometry">
-      <rect>
-       <x>610</x>
-       <y>10</y>
-       <width>16</width>
-       <height>111</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Light</string>
-     </property>
-     <property name="minimum">
-      <number>-90</number>
-     </property>
-     <property name="maximum">
-      <number>90</number>
+     <property name="pageStep">
+      <number>15</number>
      </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -209,20 +215,7 @@
       <enum>QSlider::TicksAbove</enum>
      </property>
      <property name="tickInterval">
-      <number>10</number>
-     </property>
-    </widget>
-    <widget class="QSlider" name="verticalSlider_3">
-     <property name="geometry">
-      <rect>
-       <x>670</x>
-       <y>10</y>
-       <width>16</width>
-       <height>111</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <number>15</number>
      </property>
     </widget>
    </widget>
@@ -285,7 +278,7 @@ math.log(r)
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>722</width>
+     <width>720</width>
      <height>18</height>
     </rect>
    </property>
