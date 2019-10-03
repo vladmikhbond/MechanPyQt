@@ -40,9 +40,6 @@ class Main(QMainWindow):
 
         self.show()
 
-        # init timer
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.step)
 
         # init handlers
         self.setMouseTracking(True)
@@ -53,32 +50,32 @@ class Main(QMainWindow):
 
         # first time drawing
         self.resetSettings()
-        self.resetConditions()
+
+        # init timer
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.step)
         self.timerStart()
 
 
     # ========================================== Settings
-
-
-
 
     def timerStart(self):
         if ss.view:
             self.fieldWidget.setVisible(False)
             self.timer.stop()
         else:
-            self.fieldWidget.setVisible(True)
+            # self.fieldWidget.setVisible(True)
             self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
     def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
         ss.view = val
-        self._changeSettingsText(val, "'view':", " ")
+        self._changeSettingsText(val, "view=", " ")
 
         val = -abs(val + 7)
         self.glWidget.light = val
-        self._changeSettingsText(val, "'light':", ",")
+        self._changeSettingsText(val, "light=", ",")
 
         self.ui.lightSlider.valueChanged.disconnect(self.lightSlider_changed)
         self.ui.lightSlider.setValue(val)
@@ -89,7 +86,7 @@ class Main(QMainWindow):
     def lightSlider_changed(self):
         val = self.ui.lightSlider.value()
         self.glWidget.light = val
-        self._changeSettingsText(val, "'light':", ",")
+        self._changeSettingsText(val, "light=", ",")
         self.okBtnClicked()
 
     def _changeSettingsText(self, val, key1, key2):
@@ -122,36 +119,25 @@ class Main(QMainWindow):
 
     def okBtnClicked(self):
         self.resetSettings()
-        ss.saveToFile()
         self.timerStart()
         self.glWidget.repaint()
+
+    def okBallBtnClicked(self):
+        self.resetSettings()
+        self.timerStart()
 
     # from input text
     #
     def resetSettings(self):
-        # renew settings
-        text = self.ui.settings.toPlainText()
-        ss.strToParams(text)
-        ss.V = self.ui.potential.toPlainText()
-        self.model.resetV()                                # todo
+        ss.reset(self.ui.settings.toPlainText(),
+                 self.ui.potential.toPlainText(),
+                 self.ui.conditions.toPlainText())
+        self.model.reset(ss)
         self.fieldWidget.createFieldImage()
+
         # correct slider positions
-        # self.ui.viewSlider.setValue(self.glWidget.view)   todo
-        # self.ui.lightSlider.setValue(self.glWidget.light)   todo
-
-
-
-
-    def okBallBtnClicked(self):
-        self.resetConditions()
-        self.model.balls[0].reset(ss)
-        self.fieldWidget.createFieldImage()
-        ss.saveToFile()
-        self.timerStart()
-
-    def resetConditions(self):
-        text = self.ui.conditions.toPlainText()
-        ss.strToBall(text)
+        self.ui.viewSlider.setValue(ss.view)
+        self.ui.lightSlider.setValue(ss.light)
 
 
     def step(self):

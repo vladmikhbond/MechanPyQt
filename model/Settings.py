@@ -40,27 +40,27 @@ class Settings:
             print(self.ball_vx, file=f)
             print(self.ball_vy, file=f)
 
-    #  "kz=1.1, cell=7, light=10, view=10"
-    def paramsToStr(self):
-        return f"kz={self.kz}, cell={self.cell}, light={self.light}, view={self.view}"
 
-    def strToParams(self, s):
-        eqs = [x.split('=') for x in s.split(',')]
-        for k, v in eqs:
-            v = float(v.strip()) if "kz" in k else int(v.strip())
-            setattr(self, k.strip(), v)
+    def paramsToStr(self):
+        #  "kz=1.1, cell=7, light=10, view=10"
+        return f"kz={self.kz}, cell={self.cell}, light={self.light}, view={self.view}"
 
     def ballToStr(self):
         return f"x={self.ball_x}, y={self.ball_y}, vx={self.ball_vx}, vy={self.ball_vy}"
 
-    def strToBall(self, s):
-        eqs = [x.split('=') for x in s.split(',')]
+    def reset(self, paramStr, potentStr, ballStr):
+        eqs = [x.split('=') for x in paramStr.split(',')]
+        for k, v in eqs:
+            v = float(v.strip()) if "kz" in k else int(v.strip())
+            setattr(self, k.strip(), v)
+
+        self.V = potentStr
+
+        eqs = [x.split('=') for x in ballStr.split(',')]
         for k, v in eqs:
             setattr(self, "ball_" + k.strip(), float(v.strip()))
 
+        self.saveToFile()
 
-
-
-
+# singleton
 settings = Settings()
-settings.strToParams("kz=1.1, cell=6, light=0, view=0")
