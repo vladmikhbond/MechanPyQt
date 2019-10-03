@@ -1,6 +1,6 @@
 import sys
-import os.path
 from model.Settings import settings as ss
+
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtCore import QTimer, QRect, QPoint
 from model.Ball import Ball
@@ -12,12 +12,7 @@ from glWidget import GLWidget
 
 FIELD_SIDE = 700
 T_INTERVAL = 20
-CELL = 6
-
-SETTINGS = "'kz': 1, 'cell': 6, 'light': 15, 'view': 0"
-POTENTIAL = "100 * math.sin(r/ 20)"
 CONDITIONS = "'x':100, 'y':0, 'vx':0, 'vy':1"
-INI_FILE_PATH = "ini.txt"
 
 class Main(QMainWindow):
 
@@ -25,13 +20,13 @@ class Main(QMainWindow):
         super().__init__()
 
         # init model
-        self.model = Central(FIELD_SIDE, CELL, Ball())
+        self.model = Central(FIELD_SIDE, ss.cell, Ball())
 
         # init UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.glWidget = GLWidget(self, self.model, SETTINGS)
+        self.glWidget = GLWidget(self, self.model, ss)
         self.glWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.glWidget.setObjectName("glWidget")
 
@@ -40,9 +35,8 @@ class Main(QMainWindow):
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
         #
-        self.loadFromFile()
-        self.ui.settings.setPlainText(SETTINGS)
-        self.ui.potential.setPlainText(POTENTIAL)
+        self.ui.settings.setPlainText(ss.paramsToStr())
+        self.ui.potential.setPlainText(ss.V)
         self.ui.conditions.setPlainText(CONDITIONS)
 
         self.show()
@@ -67,23 +61,8 @@ class Main(QMainWindow):
 
     # ========================================== Settings
 
-    def loadFromFile(self):
-        global SETTINGS, POTENTIAL, CONDITIONS
-        if os.path.exists(INI_FILE_PATH):
-            with open(INI_FILE_PATH, 'r') as f:
-                lines = f.readlines()
-            if len(lines) >= 3:
-                if lines[0]: SETTINGS = lines[0].strip()
-                if lines[1]: POTENTIAL = lines[1].strip()
-                if lines[2]: CONDITIONS = lines[2].strip()
-
-    def saveToFile(self):
-        global SETTINGS, POTENTIAL, CONDITIONS
-        with open(INI_FILE_PATH, 'w') as f:
-            f.write(SETTINGS + '\n')
-            f.write(POTENTIAL + '\n')
-            f.write(CONDITIONS + '\n')
-
+    # from input text
+    #
     def resetConditions(self):
         global CONDITIONS
         # renew a ball
@@ -91,23 +70,22 @@ class Main(QMainWindow):
         self.model.balls[0].reset(CONDITIONS)
         self.fieldWidget.createFieldImage()
 
+    # from input text
+    #
     def resetSettings(self):
-        global SETTINGS, POTENTIAL
         # renew settings
-        SETTINGS = self.ui.settings.toPlainText()
-        self.glWidget.reset(SETTINGS)
-        # renew potential
-        POTENTIAL  = self.ui.potential.toPlainText()
-        self.model.reset(POTENTIAL )
+        text = self.ui.settings.toPlainText()
+        ss.strToParams(text)
+        ss.V = self.ui.potential.toPlainText()
+        self.model.resetV()                                # todo
         self.fieldWidget.createFieldImage()
         # correct slider positions
-        self.ui.viewSlider.setValue(self.glWidget.view)
-        self.ui.lightSlider.setValue(self.glWidget.light)
-
+        # self.ui.viewSlider.setValue(self.glWidget.view)   todo
+        # self.ui.lightSlider.setValue(self.glWidget.light)   todo
 
 
     def timerStart(self):
-        if self.glWidget.view:
+        if ss.view:
             self.fieldWidget.setVisible(False)
             self.timer.stop()
         else:
@@ -117,7 +95,7 @@ class Main(QMainWindow):
     # ========================================== Handlers
     def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
-        self.glWidget.view = val
+        ss.view = val
         self._changeSettingsText(val, "'view':", " ")
 
         val = -abs(val + 7)
@@ -167,7 +145,7 @@ class Main(QMainWindow):
 
     def okBtnClicked(self):
         self.resetSettings()
-        self.saveToFile()
+        ss.saveToFile()
         self.timerStart()
         self.glWidget.repaint()
 

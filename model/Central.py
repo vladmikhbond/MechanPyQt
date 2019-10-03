@@ -1,5 +1,7 @@
 # import math is needed for V evaluation
 import math
+from model.Settings import settings as ss
+
 
 _delta = 0.001
 
@@ -33,6 +35,6 @@ class Central:
         ball.owner = self
         self.balls.append(ball)
 
-    def reset(self, text):
-        text = text.replace("r", "((x*x + y*y)**0.5)")
+    def resetV(self):
+        text = ss.V.replace("r", "((x*x + y*y)**0.5)")
         Central.V = eval("lambda x, y: " + text)

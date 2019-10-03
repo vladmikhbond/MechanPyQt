@@ -37,7 +37,6 @@ class Settings:
         for k, v in eqs:
             v = float(v.strip()) if "kz" in k else int(v.strip())
             setattr(self, k.strip(), v)
-        pass
 
 
 

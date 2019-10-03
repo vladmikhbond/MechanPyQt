@@ -1,24 +1,16 @@
 import math
 from datetime import datetime
 from model.Central import Central
+from model.Settings import settings as ss
 from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QOpenGLWidget)
 from OpenGL.GL import *
 import OpenGL.GLU as glu
 
 class GLWidget(QOpenGLWidget):
 
-    def __init__(self, parent, model, settings):
+    def __init__(self, parent, model, ss):
         super().__init__(parent)
         self.model = model
-        self.reset(settings)
-        self.cell = self.model.cell
-
-    def reset(self, text):
-        o = eval('{' + text + '}')
-        self.kz = o['kz']
-        self.view = o['view']
-        self.light = o['light']
-        self.cell = o['cell']
 
     def initializeGL(self):
         MAT_COLOR = [1, 1, 1]
@@ -68,13 +60,13 @@ class GLWidget(QOpenGLWidget):
         glPushMatrix()
 
         # set camera position
-        camY = math.sin(self.view * math.pi / 180) * 1000
-        camZ = math.cos(self.view * math.pi / 180) * 1000
+        camY = math.sin(ss.view * math.pi / 180) * 1000
+        camZ = math.cos(ss.view * math.pi / 180) * 1000
         glu.gluLookAt(0, camY, camZ,   0, 0, 0,    0, 1, 0)
 
         # light position
-        ligX = math.sin(self.light * math.pi / 180)
-        ligZ = math.cos(self.light * math.pi / 180)
+        ligX = math.sin(ss.light * math.pi / 180)
+        ligZ = math.cos(ss.light * math.pi / 180)
         glLightfv(GL_LIGHT0, GL_POSITION, [0, ligX, ligZ, 0])
         glLightfv(GL_LIGHT1, GL_POSITION, [0, -ligX, -ligZ, 0])
 
@@ -82,7 +74,7 @@ class GLWidget(QOpenGLWidget):
 
         w = self.model.width // 2
         h = self.model.height // 2
-        d = self.cell
+        d = ss.cell
 
         # строим поверхность от дальних вершин к ближним
         for x in range(w, -w - d, -d):
@@ -135,7 +127,7 @@ class GLWidget(QOpenGLWidget):
         glLoadIdentity()
 
     def z(self, x, y):
-        return Central.V(x, y) * self.kz
+        return Central.V(x, y) * ss.kz
 
 def normcrossprod(v0, v1, v2):
     ax = v1[0] - v0[0]
