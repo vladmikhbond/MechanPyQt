@@ -12,7 +12,6 @@ from glWidget import GLWidget
 
 FIELD_SIDE = 700
 T_INTERVAL = 20
-CONDITIONS = "'x':100, 'y':0, 'vx':0, 'vy':1"
 
 class Main(QMainWindow):
 
@@ -37,7 +36,7 @@ class Main(QMainWindow):
         #
         self.ui.settings.setPlainText(ss.paramsToStr())
         self.ui.potential.setPlainText(ss.V)
-        self.ui.conditions.setPlainText(CONDITIONS)
+        self.ui.conditions.setPlainText(ss.ballToStr())
 
         self.show()
 
@@ -53,35 +52,14 @@ class Main(QMainWindow):
         self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
 
         # first time drawing
-        self.resetConditions()
         self.resetSettings()
+        self.resetConditions()
         self.timerStart()
 
-        xxxx = ss
 
     # ========================================== Settings
 
-    # from input text
-    #
-    def resetConditions(self):
-        global CONDITIONS
-        # renew a ball
-        CONDITIONS = self.ui.conditions.toPlainText()
-        self.model.balls[0].reset(CONDITIONS)
-        self.fieldWidget.createFieldImage()
 
-    # from input text
-    #
-    def resetSettings(self):
-        # renew settings
-        text = self.ui.settings.toPlainText()
-        ss.strToParams(text)
-        ss.V = self.ui.potential.toPlainText()
-        self.model.resetV()                                # todo
-        self.fieldWidget.createFieldImage()
-        # correct slider positions
-        # self.ui.viewSlider.setValue(self.glWidget.view)   todo
-        # self.ui.lightSlider.setValue(self.glWidget.light)   todo
 
 
     def timerStart(self):
@@ -105,7 +83,6 @@ class Main(QMainWindow):
         self.ui.lightSlider.valueChanged.disconnect(self.lightSlider_changed)
         self.ui.lightSlider.setValue(val)
         self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
-
 
         self.okBtnClicked()
 
@@ -149,10 +126,33 @@ class Main(QMainWindow):
         self.timerStart()
         self.glWidget.repaint()
 
+    # from input text
+    #
+    def resetSettings(self):
+        # renew settings
+        text = self.ui.settings.toPlainText()
+        ss.strToParams(text)
+        ss.V = self.ui.potential.toPlainText()
+        self.model.resetV()                                # todo
+        self.fieldWidget.createFieldImage()
+        # correct slider positions
+        # self.ui.viewSlider.setValue(self.glWidget.view)   todo
+        # self.ui.lightSlider.setValue(self.glWidget.light)   todo
+
+
+
+
     def okBallBtnClicked(self):
         self.resetConditions()
-        self.saveToFile()
+        self.model.balls[0].reset(ss)
+        self.fieldWidget.createFieldImage()
+        ss.saveToFile()
         self.timerStart()
+
+    def resetConditions(self):
+        text = self.ui.conditions.toPlainText()
+        ss.strToBall(text)
+
 
     def step(self):
         # stop timer when a ball is far away

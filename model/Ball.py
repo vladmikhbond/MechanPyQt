@@ -36,12 +36,11 @@ class Ball:
         self.x += self.vx
         self.y += self.vy
 
-    def reset(self, text):
-        o = eval('{' + text + '}')
-        self.x = o['x']
-        self.y = o['y']
-        self.vx = o['vx']
-        self.vy = o['vy']
+    def reset(self, ss):
+        self.x = ss.ball_x
+        self.y = ss.ball_y
+        self.vx = ss.ball_vx
+        self.vy = ss.ball_vy
         self._x = None
         self.drawX = None
 

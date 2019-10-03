@@ -10,6 +10,10 @@ class Settings:
         self.light = 0
         self.view = 0
         self.V = "100 *  math.sin(r/ 20)"
+        self.ball_x = 100
+        self.ball_y = 0
+        self.ball_vx = 0
+        self.ball_vy = 1
 
     def loadFromFile(self):
         if os.path.exists(INI_FILE):
@@ -19,6 +23,10 @@ class Settings:
                 self.light = int(f.readline())
                 self.view = int(f.readline())
                 self.V = f.readline()
+                self.ball_x = float(f.readline())
+                self.ball_y = float(f.readline())
+                self.ball_vx = float(f.readline())
+                self.ball_vy = float(f.readline())
 
     def saveToFile(self):
         with open(INI_FILE, 'w') as f:
@@ -27,6 +35,10 @@ class Settings:
             print(self.light, file=f)
             print(self.view, file=f)
             print(self.V, file=f)
+            print(self.ball_x, file=f)
+            print(self.ball_y, file=f)
+            print(self.ball_vx, file=f)
+            print(self.ball_vy, file=f)
 
     #  "kz=1.1, cell=7, light=10, view=10"
     def paramsToStr(self):
@@ -37,6 +49,14 @@ class Settings:
         for k, v in eqs:
             v = float(v.strip()) if "kz" in k else int(v.strip())
             setattr(self, k.strip(), v)
+
+    def ballToStr(self):
+        return f"x={self.ball_x}, y={self.ball_y}, vx={self.ball_vx}, vy={self.ball_vy}"
+
+    def strToBall(self, s):
+        eqs = [x.split('=') for x in s.split(',')]
+        for k, v in eqs:
+            setattr(self, "ball_" + k.strip(), float(v.strip()))
 
 
 
