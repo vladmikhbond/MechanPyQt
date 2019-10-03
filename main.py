@@ -1,5 +1,6 @@
 import sys
 import os.path
+from model.Settings import settings as ss
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtCore import QTimer, QRect, QPoint
 from model.Ball import Ball
@@ -62,7 +63,7 @@ class Main(QMainWindow):
         self.resetSettings()
         self.timerStart()
 
-
+        xxxx = ss
 
     # ========================================== Settings
 

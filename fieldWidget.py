@@ -14,7 +14,7 @@ class FieldWidget(QWidget):
         self.model = model
         self.fieldImage = None
         self.ballImage = QImage()
-        self.ballImage.load('ball.png')
+        self.ballImage.load('ui/ball.png')
 
     def paintEvent(self, event):
         qp = QPainter()
