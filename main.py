@@ -119,10 +119,22 @@ class Main(QMainWindow):
         self.glWidget.view = val
         self._changeSettingsText(val, "'view':", " ")
 
+        val = -abs(val + 7)
+        self.glWidget.light = val
+        self._changeSettingsText(val, "'light':", ",")
+
+        self.ui.lightSlider.valueChanged.disconnect(self.lightSlider_changed)
+        self.ui.lightSlider.setValue(val)
+        self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
+
+
+        self.okBtnClicked()
+
     def lightSlider_changed(self):
         val = self.ui.lightSlider.value()
         self.glWidget.light = val
         self._changeSettingsText(val, "'light':", ",")
+        self.okBtnClicked()
 
     def _changeSettingsText(self, val, key1, key2):
         text = self.ui.settings.toPlainText()
@@ -131,7 +143,7 @@ class Main(QMainWindow):
         if idx2 == -1:
             idx2 = len(text)
         self.ui.settings.setPlainText(text[:idx1] + str(val) + text[idx2:])
-        self.okBtnClicked()
+
 
     def mousePressEvent(self, event):
         # diagnostic print

@@ -24,7 +24,7 @@ class GLWidget(QOpenGLWidget):
         MAT_COLOR = [1, 1, 1]
         DIFFUSE_COLOR = [0.3, 0.3, 1, 1.0]
         AMBIENT_COLOR = [0, 0, 0.1, 1.0]
-        DIFFUSE_COLOR1 = [1, 0.3, 0.3, 1.0]
+        DIFFUSE_COLOR1 = [0.5, 0.2, 0.2, 1.0]
         AMBIENT_COLOR1 = [0.1, 0, 0, 1.0]
 
         # тест глубины не справляется, строим поверхность от дальних вершин к ближним
@@ -73,10 +73,10 @@ class GLWidget(QOpenGLWidget):
         glu.gluLookAt(0, camY, camZ,   0, 0, 0,    0, 1, 0)
 
         # light position
-        posX = math.sin(self.light * math.pi / 180)
-        posZ = math.cos(self.light * math.pi / 180)
-        glLightfv(GL_LIGHT0, GL_POSITION, [posX, 0, posZ, 0])
-        glLightfv(GL_LIGHT1, GL_POSITION, [-posX, 0, -posZ, 0])
+        ligX = math.sin(self.light * math.pi / 180)
+        ligZ = math.cos(self.light * math.pi / 180)
+        glLightfv(GL_LIGHT0, GL_POSITION, [0, ligX, ligZ, 0])
+        glLightfv(GL_LIGHT1, GL_POSITION, [0, -ligX, -ligZ, 0])
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -120,16 +120,18 @@ class GLWidget(QOpenGLWidget):
         # окно просмотра - ни на что не влияет ???
         glViewport(0, 0, width, height)
 
-        # загрузка 1-матрицы проекций
+        # работаем с матрицей проекций
         glMatrixMode(GL_PROJECTION)
+        # загрузка 1-матрицы
         glLoadIdentity()
 
         # режим ортогональной поекции
         z_from, z_to = -2000, 3000
         glOrtho(-side, side, -side, side, z_from, z_to)
 
-        # загрузка 1-матрицы наблюдения модели
+        # работаем с матрицей наблюдения модели
         glMatrixMode(GL_MODELVIEW)
+        # загрузка 1-матрицы
         glLoadIdentity()
 
     def z(self, x, y):
