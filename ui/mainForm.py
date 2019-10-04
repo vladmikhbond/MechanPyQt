@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(720, 878)
+        MainWindow.resize(981, 878)
         font = QtGui.QFont()
         font.setPointSize(15)
         MainWindow.setFont(font)
@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.potential.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.potential.setObjectName("potential")
         self.okButton = QtWidgets.QPushButton(self.frame)
-        self.okButton.setGeometry(QtCore.QRect(580, 40, 71, 41))
+        self.okButton.setGeometry(QtCore.QRect(580, 10, 71, 71))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.okButton.setFont(font)
@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
         self.conditions.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.conditions.setObjectName("conditions")
         self.settings = QtWidgets.QPlainTextEdit(self.frame)
-        self.settings.setGeometry(QtCore.QRect(10, 10, 481, 31))
+        self.settings.setGeometry(QtCore.QRect(10, 10, 561, 31))
         font = QtGui.QFont()
         font.setPointSize(9)
         font.setBold(False)
@@ -67,15 +67,6 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.okBallButton.setFont(font)
         self.okBallButton.setObjectName("okBallButton")
-        self.lightSlider = QtWidgets.QSlider(self.frame)
-        self.lightSlider.setGeometry(QtCore.QRect(510, 10, 141, 21))
-        self.lightSlider.setMinimum(-90)
-        self.lightSlider.setMaximum(90)
-        self.lightSlider.setPageStep(15)
-        self.lightSlider.setOrientation(QtCore.Qt.Horizontal)
-        self.lightSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        self.lightSlider.setTickInterval(15)
-        self.lightSlider.setObjectName("lightSlider")
         self.viewSlider = QtWidgets.QSlider(self.frame)
         self.viewSlider.setGeometry(QtCore.QRect(670, 10, 31, 111))
         self.viewSlider.setMinimum(-90)
@@ -102,7 +93,7 @@ class Ui_MainWindow(object):
         self.comment.setObjectName("comment")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 720, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 981, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -119,16 +110,15 @@ class Ui_MainWindow(object):
         self.potential.setPlainText(_translate("MainWindow", "0.00005 * r**2"))
         self.okButton.setText(_translate("MainWindow", "Ok"))
         self.conditions.setToolTip(_translate("MainWindow", "Initial Conditions"))
-        self.conditions.setPlainText(_translate("MainWindow", "\'x\':100, \'y\':0, \'vx\':0, \'vy\':1 "))
+        self.conditions.setPlainText(_translate("MainWindow", "x=100 ..."))
         self.settings.setToolTip(_translate("MainWindow", "Settings"))
-        self.settings.setPlainText(_translate("MainWindow", "\'kz\': 1"))
+        self.settings.setPlainText(_translate("MainWindow", "kz=1 ..."))
         self.okBallButton.setText(_translate("MainWindow", "Ok"))
-        self.lightSlider.setToolTip(_translate("MainWindow", "Light"))
         self.viewSlider.setToolTip(_translate("MainWindow", "View"))
         self.comment.setPlainText(_translate("MainWindow", "0.00005 * r**2    - резиновая нить, есть круговые орбиты, их частота одинакова\n"
 "0.01 * r         - сила не зависит от расстояния, есть круговые орбиты\n"
-"-100 / r       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)\n"
-"-5000 / r**2 - сила обратно пропорц. кубу расстояния - неуст.орбиты\n"
+"-100 / (r + 0.0001)       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)\n"
+"-5000 / (r**2 + 0.0001) - сила обратно пропорц. кубу расстояния - неуст.орбиты\n"
 "\n"
 "100 *  math.sin(r/ 20) \n"
 "\n"

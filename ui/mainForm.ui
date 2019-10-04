@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
+    <width>981</width>
     <height>878</height>
    </rect>
   </property>
@@ -69,9 +69,9 @@
      <property name="geometry">
       <rect>
        <x>580</x>
-       <y>40</y>
+       <y>10</y>
        <width>71</width>
-       <height>41</height>
+       <height>71</height>
       </rect>
      </property>
      <property name="font">
@@ -109,7 +109,7 @@
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
      <property name="plainText">
-      <string>'x':100, 'y':0, 'vx':0, 'vy':1 </string>
+      <string>x=100 ...</string>
      </property>
     </widget>
     <widget class="QPlainTextEdit" name="settings">
@@ -117,7 +117,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>481</width>
+       <width>561</width>
        <height>31</height>
       </rect>
      </property>
@@ -135,7 +135,7 @@
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
      <property name="plainText">
-      <string>'kz': 1</string>
+      <string>kz=1 ...</string>
      </property>
     </widget>
     <widget class="QPushButton" name="okBallButton">
@@ -154,37 +154,6 @@
      </property>
      <property name="text">
       <string>Ok</string>
-     </property>
-    </widget>
-    <widget class="QSlider" name="lightSlider">
-     <property name="geometry">
-      <rect>
-       <x>510</x>
-       <y>10</y>
-       <width>141</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Light</string>
-     </property>
-     <property name="minimum">
-      <number>-90</number>
-     </property>
-     <property name="maximum">
-      <number>90</number>
-     </property>
-     <property name="pageStep">
-      <number>15</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="tickPosition">
-      <enum>QSlider::TicksBelow</enum>
-     </property>
-     <property name="tickInterval">
-      <number>15</number>
      </property>
     </widget>
     <widget class="QSlider" name="viewSlider">
@@ -262,8 +231,8 @@
     <property name="plainText">
      <string>0.00005 * r**2    - резиновая нить, есть круговые орбиты, их частота одинакова
 0.01 * r         - сила не зависит от расстояния, есть круговые орбиты
--100 / r       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)
--5000 / r**2 - сила обратно пропорц. кубу расстояния - неуст.орбиты
+-100 / (r + 0.0001)       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)
+-5000 / (r**2 + 0.0001) - сила обратно пропорц. кубу расстояния - неуст.орбиты
 
 100 *  math.sin(r/ 20) 
 
@@ -278,8 +247,8 @@ math.log(r)
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>720</width>
-     <height>18</height>
+     <width>981</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

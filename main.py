@@ -46,7 +46,6 @@ class Main(QMainWindow):
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
         self.ui.viewSlider.valueChanged.connect(self.viewSlider_changed)
-        self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
 
         # first time drawing
         self.resetSettings()
@@ -64,7 +63,7 @@ class Main(QMainWindow):
             self.fieldWidget.setVisible(False)
             self.timer.stop()
         else:
-            # self.fieldWidget.setVisible(True)
+            self.fieldWidget.setVisible(True)
             self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
@@ -77,16 +76,6 @@ class Main(QMainWindow):
         self.glWidget.light = val
         self._changeSettingsText(val, "light=", ",")
 
-        self.ui.lightSlider.valueChanged.disconnect(self.lightSlider_changed)
-        self.ui.lightSlider.setValue(val)
-        self.ui.lightSlider.valueChanged.connect(self.lightSlider_changed)
-
-        self.okBtnClicked()
-
-    def lightSlider_changed(self):
-        val = self.ui.lightSlider.value()
-        self.glWidget.light = val
-        self._changeSettingsText(val, "light=", ",")
         self.okBtnClicked()
 
     def _changeSettingsText(self, val, key1, key2):
@@ -134,10 +123,8 @@ class Main(QMainWindow):
                  self.ui.conditions.toPlainText())
         self.model.reset(ss)
         self.fieldWidget.createFieldImage()
-
         # correct slider positions
         self.ui.viewSlider.setValue(ss.view)
-        self.ui.lightSlider.setValue(ss.light)
 
 
     def step(self):
