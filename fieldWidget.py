@@ -1,6 +1,7 @@
+import math
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap, QImage
-from PyQt5.QtCore import QPoint, Qt
+from PyQt5.QtCore import QPoint, QRectF, Qt
 from model.Settings import settings as ss
 
 TRACK_COLOR = QColor('red')
@@ -18,25 +19,36 @@ class FieldWidget(QWidget):
         self.ballImage.load('ui/ball.png')
 
     def paintEvent(self, event):
+        w, h = self.model.width / 2, self.model.height / 2
         qp = QPainter()
-        qp.begin(self)
-        if self.fieldImage:
-            qp.drawPixmap(0, 0, self.fieldImage)
-
-        # balls
-        qp.translate(self.model.width / 2, self.model.height / 2)
-        qp.scale(1, -1)
         qp.setPen(BALL_COLOR)
+        y_scale = math.cos(ss.view * math.pi / 180)
+
+        qp.begin(self)
+        qp.translate(w, h)
+
+        qp.save()
+
+
+        # back image
+
+        qp.scale(1, y_scale)
+        if self.fieldImage:
+            qp.drawPixmap(-w, -h, self.fieldImage)
+        qp.restore()
+
+        # just ball
+        qp.scale(1, -y_scale)
         r = 11
         for b in self.model.balls:
             qp.drawImage(QPoint(b.x-r, b.y-r), self.ballImage)
 
         qp.end()
 
-        # tracks to image
+        # put tracks to image
         qpi = QPainter()
         qpi.begin(self.fieldImage)
-        qpi.translate(self.model.width / 2, self.model.height / 2)
+        qpi.translate(w, h)
         qpi.scale(1, -1)
         qpi.setPen(TRACK_COLOR)
         for b in self.model.balls:
