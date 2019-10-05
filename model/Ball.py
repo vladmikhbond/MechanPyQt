@@ -18,6 +18,7 @@ class Ball:
         self._vy = None
         self.owner = None
         self.drawX = None
+        self.Eo = 1
 
     def force(self):
         self.fx = - dV_dx(self.x, self.y)
@@ -52,6 +53,14 @@ class Ball:
 
     def V(self):
         return Central.V(self.x, self.y)
+
+    def setEo(self):
+        self.Eo = self.T() + self.V()
+
+    def gap(self):
+        return (self.T() + self.V() - self.Eo) / self.Eo
+
+
 
 
     def lagrangian(self):

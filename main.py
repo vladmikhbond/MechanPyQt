@@ -125,7 +125,8 @@ class Main(QMainWindow):
         self.fieldWidget.createFieldImage()
         # correct slider positions
         self.ui.viewSlider.setValue(ss.view)
-
+        #
+        self.model.balls[0].setEo()
 
     def step(self):
         # stop timer when a ball is far away
@@ -140,8 +141,7 @@ class Main(QMainWindow):
 
         # diagnostic: Energy and Lagrangian
         b = self.model.balls[0]
-        o = b.lagrangian()
-        self.setWindowTitle(f'E = { b.T() + b.V() :12.8f}   L = ({o[0] + o[1]  :12.8f}, {o[2] + o[3]  :12.8f})')
+        self.setWindowTitle(f' E = {b.Eo:12.8f}    gap = {b.gap():12.8f}')
 
 
 if __name__ == '__main__':
