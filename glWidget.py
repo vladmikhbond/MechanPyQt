@@ -50,11 +50,15 @@ class GLWidget(QOpenGLWidget):
     #   | /     |
     #   v1 ---- v3
     def paintGL(self):
-        stamp = datetime.now().timestamp()  #######
-
         if Central.V(1, 1) is None:
             return
+        try:
+            self.paint()
+        except:
+            pass
 
+    def paint(self):
+        stamp = datetime.now().timestamp()  #######
         # save current model view matrix
         glMatrixMode(GL_MODELVIEW)
         glPushMatrix()
