@@ -76,7 +76,7 @@ class Main(QMainWindow):
         self.glWidget.light = val
         self._changeSettingsText(val, "light=", ",")
 
-        self.okBtnClicked()
+        self.glWidget.repaint()
 
     def _changeSettingsText(self, val, key1, key2):
         text = self.ui.settings.toPlainText()
