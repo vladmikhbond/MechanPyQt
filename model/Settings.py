@@ -54,7 +54,7 @@ class Settings:
             v = float(v.strip()) if "kz" in k else int(v.strip())
             setattr(self, k.strip(), v)
 
-        self.V = potentStr
+        self.V = potentStr.strip()
 
         eqs = [x.split('=') for x in ballStr.split(',')]
         for k, v in eqs:
@@ -64,3 +64,4 @@ class Settings:
 
 # singleton
 settings = Settings()
+settings.loadFromFile()

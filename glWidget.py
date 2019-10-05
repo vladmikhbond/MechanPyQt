@@ -52,7 +52,7 @@ class GLWidget(QOpenGLWidget):
     def paintGL(self):
         stamp = datetime.now().timestamp()  #######
 
-        if Central.V(0, 0) is None:
+        if Central.V(1, 1) is None:
             return
 
         # save current model view matrix
