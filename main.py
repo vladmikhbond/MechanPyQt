@@ -59,12 +59,12 @@ class Main(QMainWindow):
     # ========================================== Settings
 
     def timerStart(self):
-        if ss.view:
-            self.fieldWidget.setVisible(False)
-            self.timer.stop()
-        else:
-            self.fieldWidget.setVisible(True)
-            self.timer.start(T_INTERVAL)
+        # if ss.view:
+        #     self.fieldWidget.setVisible(False)
+        #     self.timer.stop()
+        # else:
+        self.fieldWidget.setVisible(True)
+        self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
     def viewSlider_changed(self):
