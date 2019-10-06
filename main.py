@@ -1,5 +1,7 @@
 import sys
 from model.Settings import settings as ss
+from model.Arch import *
+
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtCore import QTimer, QRect, QPoint

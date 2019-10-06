@@ -4,20 +4,28 @@ INI_FILE = ".ini"
 
 class Settings:
     def __init__(self):
-        # default settings
+        # default values
         self.kz = 1
         self.cell = 6
         self.light = 0
         self.view = 0
+        #
         self.V = "100 *  math.sin(r/ 20)"
+        #
         self.ball_x = 100
         self.ball_y = 0
         self.ball_vx = 0
         self.ball_vy = 1
 
+    # def getComment(self):
+    #     i = self.V.rindex("#")
+    #     if i != -1:
+    #         return self.V[i::]
+    #     return ""
+
     def loadFromFile(self):
         if os.path.exists(INI_FILE):
-            with open(INI_FILE, 'r') as f:
+            with open(INI_FILE, 'r', encoding="utf-8") as f:
                 self.kz = float(f.readline())
                 self.cell = int(f.readline())
                 self.light = int(f.readline())
@@ -29,7 +37,7 @@ class Settings:
                 self.ball_vy = float(f.readline())
 
     def saveToFile(self):
-        with open(INI_FILE, 'w') as f:
+        with open(INI_FILE, 'w', encoding="utf-8") as f:
             print(self.kz, file=f)
             print(self.cell, file=f)
             print(self.light, file=f)
@@ -47,6 +55,10 @@ class Settings:
 
     def ballToStr(self):
         return f"x={self.ball_x}, y={self.ball_y}, vx={self.ball_vx}, vy={self.ball_vy}"
+
+
+    def __str__(self):
+        return self.paramsToStr() + "\n" + self.V + "\n" + self.ballToStr()
 
     def reset(self, paramStr, potentStr, ballStr):
         eqs = [x.split('=') for x in paramStr.split(',')]
