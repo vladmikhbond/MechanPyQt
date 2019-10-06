@@ -224,7 +224,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="arcRemButton">
     <property name="geometry">
      <rect>
       <x>1020</x>
@@ -237,7 +237,7 @@
      <string>-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="arcAddButton">
     <property name="geometry">
      <rect>
       <x>1020</x>

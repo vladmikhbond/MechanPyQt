@@ -48,10 +48,12 @@ class Main(QMainWindow):
 
         # init handlers
         self.setMouseTracking(True)
-        self.ui.okButton.clicked.connect(self.okBtnClicked)
-        self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
+        self.ui.okButton.clicked.connect(self.okBtn_clicked)
+        self.ui.okBallButton.clicked.connect(self.okBallBtn_clicked)
         self.ui.viewSlider.valueChanged.connect(self.viewSlider_changed)
         self.ui.arcList.itemSelectionChanged.connect(self.arc_selected)
+        self.ui.arcAddButton.clicked.connect(self.arcAddButton_clicked)
+        self.ui.arcRemButton.clicked.connect(self.arcRemButton_clicked)
 
         # first time drawing
         self.resetSettings()
@@ -74,12 +76,27 @@ class Main(QMainWindow):
 
     # ========================================== Handlers
     def arc_selected(self):
+        i = self.ui.arcList.currentRow()
+        if i > -1:
+            setting = archive[i]
+            self.ui.settings.setPlainText(setting.paramsToStr())
+            self.ui.potential.setPlainText(setting.V)
+            self.ui.conditions.setPlainText(setting.ballToStr())
+
+    def arcRemButton_clicked(self):
         lst = self.ui.arcList
         i = lst.currentRow()
-        setting = archive[i]
-        self.ui.settings.setPlainText(setting.paramsToStr())
-        self.ui.potential.setPlainText(setting.V)
-        self.ui.conditions.setPlainText(setting.ballToStr())
+        if i == -1: return
+        archive.pop(i)
+        archive.saveToFile()
+        # ui
+        lst.removeItemWidget(lst.takeItem(i))
+
+    def arcAddButton_clicked(self):
+        archive.addSetting(se)
+        archive.saveToFile()
+        # ui
+        self.ui.arcList.insertItem(0, se.getComment())
 
     def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
@@ -120,12 +137,12 @@ class Main(QMainWindow):
         y = cur.y() - self.fieldWidget.geometry().y()
         return QPoint(x - x0, y0 - y )
 
-    def okBtnClicked(self):
+    def okBtn_clicked(self):
         self.resetSettings()
         self.timerStart()
         self.glWidget.repaint()
 
-    def okBallBtnClicked(self):
+    def okBallBtn_clicked(self):
         self.resetSettings()
         self.timerStart()
 

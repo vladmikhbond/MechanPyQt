@@ -22,6 +22,10 @@ class Archive(list):
             for s in self:
                 print(s, file=f)
 
+    def addSetting(self, setting: Setting):
+        newSet = Setting()
+        newSet.reset(setting.paramsToStr(), setting.V, setting.ballToStr())
+        self.insert(0, newSet)
 
 # singleton
 archive: Archive = Archive()
