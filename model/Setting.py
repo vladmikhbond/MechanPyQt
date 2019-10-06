@@ -17,11 +17,11 @@ class Setting:
         self.ball_vx = 0
         self.ball_vy = 1
 
-    # def getComment(self):
-    #     i = self.V.rindex("#")
-    #     if i != -1:
-    #         return self.V[i::]
-    #     return ""
+    def getComment(self):
+        i = self.V.rindex("#")
+        if i != -1:
+            return self.V[i+1::].strip()
+        return ""
 
     def loadFromFile(self):
         if os.path.exists(INI_FILE):

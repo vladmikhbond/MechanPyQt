@@ -1,6 +1,6 @@
 import sys
 from model.Setting import setting as se
-from model.Archive import archive as ar
+from model.Archive import archive
 
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -27,27 +27,31 @@ class Main(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # glWidget
         self.glWidget = GLWidget(self, self.model, se)
         self.glWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.glWidget.setObjectName("glWidget")
-
+        # fieldWidget
         self.fieldWidget = FieldWidget(self, self.model)
         self.fieldWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
-        #
+        # text fields
         self.ui.settings.setPlainText(se.paramsToStr())
         self.ui.potential.setPlainText(se.V)
         self.ui.conditions.setPlainText(se.ballToStr())
+        # fill arcList
+        items = [a.getComment() for a in archive]
+        self.ui.arcList.addItems(items)
 
         self.show()
-
 
         # init handlers
         self.setMouseTracking(True)
         self.ui.okButton.clicked.connect(self.okBtnClicked)
         self.ui.okBallButton.clicked.connect(self.okBallBtnClicked)
         self.ui.viewSlider.valueChanged.connect(self.viewSlider_changed)
+        self.ui.arcList.itemSelectionChanged.connect(self.arc_selected)
 
         # first time drawing
         self.resetSettings()
@@ -69,6 +73,14 @@ class Main(QMainWindow):
         self.timer.start(T_INTERVAL)
 
     # ========================================== Handlers
+    def arc_selected(self):
+        lst = self.ui.arcList
+        i = lst.currentRow()
+        setting = archive[i]
+        self.ui.settings.setPlainText(setting.paramsToStr())
+        self.ui.potential.setPlainText(setting.V)
+        self.ui.conditions.setPlainText(setting.ballToStr())
+
     def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
         se.view = val

@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(981, 878)
+        MainWindow.resize(1079, 878)
         font = QtGui.QFont()
         font.setPointSize(15)
         MainWindow.setFont(font)
@@ -68,7 +68,7 @@ class Ui_MainWindow(object):
         self.okBallButton.setFont(font)
         self.okBallButton.setObjectName("okBallButton")
         self.viewSlider = QtWidgets.QSlider(self.frame)
-        self.viewSlider.setGeometry(QtCore.QRect(670, 10, 31, 111))
+        self.viewSlider.setGeometry(QtCore.QRect(660, 10, 31, 111))
         self.viewSlider.setMinimum(-90)
         self.viewSlider.setMaximum(90)
         self.viewSlider.setPageStep(15)
@@ -85,15 +85,18 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 698, 698))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.comment = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.comment.setGeometry(QtCore.QRect(730, 150, 591, 691))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.comment.setFont(font)
-        self.comment.setObjectName("comment")
+        self.arcList = QtWidgets.QListWidget(self.centralwidget)
+        self.arcList.setGeometry(QtCore.QRect(720, 10, 351, 831))
+        self.arcList.setObjectName("arcList")
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(1020, 63, 41, 41))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(1020, 20, 41, 41))
+        self.pushButton.setObjectName("pushButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 981, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1079, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -115,13 +118,5 @@ class Ui_MainWindow(object):
         self.settings.setPlainText(_translate("MainWindow", "kz=1 ..."))
         self.okBallButton.setText(_translate("MainWindow", "Ok"))
         self.viewSlider.setToolTip(_translate("MainWindow", "View"))
-        self.comment.setPlainText(_translate("MainWindow", "0.00005 * r**2    - резиновая нить, есть круговые орбиты, их частота одинакова\n"
-"0.01 * r         - сила не зависит от расстояния, есть круговые орбиты\n"
-"-100 / (r + 0.0001)       - потенциал поля тяготения (сила обратно пропорц. квадрату расстояния)\n"
-"-5000 / (r**2 + 0.0001) - сила обратно пропорц. кубу расстояния - неуст.орбиты\n"
-"\n"
-"100 *  math.sin(r/ 20) \n"
-"\n"
-"10 *  math.sin((x - y)/ 50) - (Нецентральные) полет по синусоиде\n"
-"math.log(r)\n"
-""))
+        self.pushButton_2.setText(_translate("MainWindow", "-"))
+        self.pushButton.setText(_translate("MainWindow", "+"))
