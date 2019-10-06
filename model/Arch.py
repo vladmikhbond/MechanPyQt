@@ -16,11 +16,9 @@ class Arch:
                     a = f.readline()
                     if not a:
                         break
-                    b = f.readline()
-                    c = f.readline()
-                    s = Settings()
-                    s.reset(a, b, c)
-                    self.sets.append(s)
+                    setting = Settings()
+                    setting.reset(a, f.readline(), f.readline())
+                    self.sets.append(setting)
 
     def saveToFile(self):
         with open(ARCH_FILE, 'w', encoding="utf-8") as f:
