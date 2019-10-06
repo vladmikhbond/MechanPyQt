@@ -1,6 +1,6 @@
 import sys
-from model.Settings import settings as ss
-from model.Arch import *
+from model.Setting import setting as se
+from model.Archive import archive as ar
 
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -21,13 +21,13 @@ class Main(QMainWindow):
         super().__init__()
 
         # init model
-        self.model = Central(FIELD_SIDE, ss.cell, Ball())
+        self.model = Central(FIELD_SIDE, se.cell, Ball())
 
         # init UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.glWidget = GLWidget(self, self.model, ss)
+        self.glWidget = GLWidget(self, self.model, se)
         self.glWidget.setGeometry(QRect(10, 150, self.model.width, self.model.height))
         self.glWidget.setObjectName("glWidget")
 
@@ -36,9 +36,9 @@ class Main(QMainWindow):
         self.fieldWidget.setMouseTracking(True)
         self.fieldWidget.setObjectName("fieldWidget")
         #
-        self.ui.settings.setPlainText(ss.paramsToStr())
-        self.ui.potential.setPlainText(ss.V)
-        self.ui.conditions.setPlainText(ss.ballToStr())
+        self.ui.settings.setPlainText(se.paramsToStr())
+        self.ui.potential.setPlainText(se.V)
+        self.ui.conditions.setPlainText(se.ballToStr())
 
         self.show()
 
@@ -71,7 +71,7 @@ class Main(QMainWindow):
     # ========================================== Handlers
     def viewSlider_changed(self):
         val = self.ui.viewSlider.value()
-        ss.view = val
+        se.view = val
         self._changeSettingsText(val, "view=", " ")
 
         val = -abs(val + 7)
@@ -120,13 +120,13 @@ class Main(QMainWindow):
     # from input text
     #
     def resetSettings(self):
-        ss.reset(self.ui.settings.toPlainText(),
+        se.reset(self.ui.settings.toPlainText(),
                  self.ui.potential.toPlainText(),
                  self.ui.conditions.toPlainText())
-        self.model.reset(ss)
+        self.model.reset(se)
         self.fieldWidget.createFieldImage()
         # correct slider positions
-        self.ui.viewSlider.setValue(ss.view)
+        self.ui.viewSlider.setValue(se.view)
         #
         self.model.balls[0].setEo()
 

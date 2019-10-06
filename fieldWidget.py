@@ -2,7 +2,7 @@ import math
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QColor, QBrush, QPen, QPixmap, QImage
 from PyQt5.QtCore import QPoint, QRectF, Qt
-from model.Settings import settings as ss
+from model.Setting import setting as ss
 
 TRACK_COLOR = QColor('red')
 BALL_COLOR = QColor('red')

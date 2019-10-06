@@ -1,6 +1,6 @@
 # import math is needed for V evaluation
 import math
-from model.Settings import settings as ss
+from model.Setting import setting as ss
 
 
 _delta = 0.001

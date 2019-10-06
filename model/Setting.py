@@ -2,7 +2,7 @@ import os
 
 INI_FILE = ".ini"
 
-class Settings:
+class Setting:
     def __init__(self):
         # default values
         self.kz = 1
@@ -75,5 +75,5 @@ class Settings:
         self.saveToFile()
 
 # singleton
-settings = Settings()
-settings.loadFromFile()
+setting = Setting()
+setting.loadFromFile()

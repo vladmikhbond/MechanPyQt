@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from model.Central import Central
-from model.Settings import settings as ss
+from model.Setting import setting as ss
 from PyQt5.QtWidgets import (QApplication, QWidget, QGridLayout, QOpenGLWidget)
 from OpenGL.GL import *
 import OpenGL.GLU as glu
