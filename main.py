@@ -174,6 +174,18 @@ class Main(QMainWindow):
         b = self.model.balls[0]
         self.setWindowTitle(f' E = {b.Eo:12.8f}    gap = {b.gap():12.8f}')
 
+    def resizeEvent(self, e):
+        # resize arcList
+        oldWidth = self.ui.arcList.geometry().width()
+        newWidth = e.size().width() - self.ui.arcList.geometry().x()
+        delta = newWidth - oldWidth
+        rect = self.ui.arcList.geometry()
+        rect.setWidth(newWidth)
+        self.ui.arcList.setGeometry(rect)
+        # shift buttons
+        x = self.ui.frame_1.geometry().x()
+        y = self.ui.frame_1.geometry().y()
+        self.ui.frame_1.move(x + delta, y)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
